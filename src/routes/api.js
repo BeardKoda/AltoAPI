@@ -2,24 +2,21 @@ var express = require('express');
 var router = express.Router();
 var authCheck = require("../app/middlewares/authrequest")
 const { check } = require('express-validator')
+const song = require('./api/songs'); 
+const auth = require('./api/auth'); 
+const album = require('./api/album')
+const artist = require('./api/artist')
 
-// custom controllers
-var AuthController 	= require('../app/controllers/auth/authController');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+router.use('/auth', auth);
+router.use('/song', song);
+router.use('/album', album);
+router.use('/artist', artist);
 
-// login routes
-router.post('/login', AuthController.login);
-router.post('/register', AuthController.register);
-// router.get('/login', LoginController.index);
-router.get('/me', authCheck, AuthController.me);
 
 // 404 response
 router.get('*', function(req, res){
-  res.json({error:'Resource not found'}, 404);
+  res.status(404).json({error:'Route not found'});
 });
 
 module.exports = router;
