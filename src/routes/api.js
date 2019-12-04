@@ -8,7 +8,7 @@ const album = require('./api/album')
 const artist = require('./api/artist')
 
 
-router.use('/auth', auth);
+router.use('/', auth);
 router.use('/song', song);
 router.use('/album', album);
 router.use('/artist', artist);

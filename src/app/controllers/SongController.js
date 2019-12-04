@@ -106,7 +106,22 @@ let controller = {
         }catch(err){
             res.status(500).json({data:"Internal Server Error"});
         }
-    }    
+    },
+    addToFav:async(req, res)=>{
+        let uid = parseInt(req.params.id)
+        // return res.send(req.params.id);ss
+        models.Favourite.create({ song_id: 2, user_id: 3, status:true }).then(
+            data =>{
+                return res.status(200).json({data:"Added to favourite"});
+              }
+        )
+    },
+    removeFromFav:async(req, res)=>{
+        let uid = parseInt(req.params.id)
+        models.Favourite.update({status:false},{where:{id:uid}}).then(data=>{
+            return res.status(200).json({data:"Removed from favourite"})
+        })
+    } 
 }
 
 module.exports = controller;

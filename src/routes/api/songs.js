@@ -9,6 +9,8 @@ router.get('/hot', SongController.hot);
 router.get('/trending', SongController.trending);
 router.get('/featured', SongController.featured);
 router.get('/:id', SongController.getById);
+router.post('/fav/add/:id', SongController.addToFav)
+router.post('/fav/remove/:id', SongController.removeFromFav)
 
 // 404 response
 router.get('*', function(req, res){
