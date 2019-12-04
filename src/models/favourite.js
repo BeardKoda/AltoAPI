@@ -33,5 +33,5 @@ module.exports = (sequelize, DataTypes) => {
     Favourite.belongsTo(models.Song, {as: 'song', foreignKey:'song_id'})
     Favourite.belongsTo(models.User, {as: 'album', foreignKey:'user_id'})
   };
-  return Favourites;
+  return Favourite;
 };

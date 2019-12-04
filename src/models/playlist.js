@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const P_Item = sequelize.define('P_Item', {
+  const Playlist = sequelize.define('Playlist', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -33,9 +33,9 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: 'updated_at',
     tableName:'playlist_items'
   });
-  P_Item.associate = function(models) {
+  Playlist.associate = function(models) {
     // // associations can be defined here
-    P_Item.belongsTo(models.Playlist, {as: 'song', foreignKey:'song_id'})
+    Playlist.belongsTo(models.Playlist, {as: 'song', foreignKey:'song_id'})
   };
-  return Favourites;
+  return Playlist;
 };

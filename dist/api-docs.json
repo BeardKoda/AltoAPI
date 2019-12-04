@@ -1,0 +1,249 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "AltoStream API",
+        "description": "API for the WebApp and MobileApp.",
+        "version": "1.0.0"
+    },
+    "host": "stream.altostream.app",
+    "basePath": "/v1",
+    "schemes": [
+        "https"
+    ],
+    "securityDefinitions": {
+        "APIKeyHeader": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authuorization"
+        },
+        "APIKeyBody": {
+            "type": "apiKey",
+            "in": "query",
+            "name": "token"
+        }
+    },
+    "paths": {
+        "/login": {
+            "post": {
+                "summary": "Authenticates User.",
+                "description": "Authenticates and generates auth token for the user's session.",
+                "tags": [
+                    "Authentication"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "data",
+                        "description": "The user data to authenticate.",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "email",
+                                "password"
+                            ],
+                            "properties": {
+                                "email": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "user authenticated"
+                    },
+                    "404": {
+                        "description": "user not found"
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "summary": "Creates New User's Account.",
+                "description": "Creates a new account for new user and returns generated auth token for the user's session.",
+                "tags": [
+                    "Authentication"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "data",
+                        "description": "Data parameters needed to create account.",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "name",
+                                "email",
+                                "password"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "user authenticated"
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "get": {
+                "summary": "Fetch User's Data.",
+                "description": "It Fetches the Authenticated User's Data.",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "operationId": "getUser",
+                "tags": [
+                    "User"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/song/hot": {
+            "get": {
+                "summary": "Fetch Hot Songs.",
+                "description": "Fetches All the Songs on the Hot List.",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Songs"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/song/featured": {
+            "get": {
+                "summary": "Fetch Featured Songs.",
+                "description": "Fetches All the Songs on the Featured List.",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Songs"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "playlist": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "email",
+                "playlist"
+            ]
+        },
+        "Songs": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "album": {
+                    "type": "object"
+                },
+                "type":{
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "title",
+                "url",
+                "album",
+                "type"
+            ]
+        }
+    }
+}

@@ -31,10 +31,11 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
+    tableName:'playlist_items'
   });
   P_Item.associate = function(models) {
     // // associations can be defined here
     P_Item.belongsTo(models.Playlist, {as: 'song', foreignKey:'song_id'})
   };
-  return Favourites;
+  return P_Item;
 };

@@ -11,13 +11,15 @@ var methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
-const passport = require('passport');
 dotenv.config();
+
 
 // Api Route File
 var api = require('./src/routes/api');
+var docs = require('./src/routes/docs');
 
 var app = express();
+var subpath = express();
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -44,7 +46,13 @@ app.use(methodOverride(function(req, res){
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.get('/', function (req, res) {
+  res.send("Hello World")
+});
+
 // Routes
+app.use('/docs', docs);
 app.use('/api/V1', api);
 
 // catch 404 and forward to error handler

@@ -1,13 +1,14 @@
 var express = require('express');
 var router = express.Router();
 // custom controllers
-var AuthController 	= require('../../app/controllers/auth/authController');
+var AuthController 	= require('../../app/controllers/AuthController');
+var Request = require('../../app/requests/LoginRequest')
 
 // login routes
-router.post('/login', AuthController.login);
+router.post('/login', Request.validate('login'), AuthController.login);
 router.post('/register', AuthController.register);
 // router.get('/login', LoginController.index);
-router.get('/me', AuthController.me);
+router.get('/profile', AuthController.getData);
 
 // 404 response
 router.get('*', function(req, res){
