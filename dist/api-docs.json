@@ -227,22 +227,18 @@
                 "title": {
                     "type": "string"
                 },
+                "artist":{
+                    "type":"object"
+                },
                 "url": {
-                    "type": "string"
-                },
-                "album": {
-                    "type": "object"
-                },
-                "type":{
                     "type": "string"
                 }
             },
             "required": [
                 "id",
                 "title",
-                "url",
-                "album",
-                "type"
+                "artist",
+                "url"
             ]
         }
     }
