@@ -6,7 +6,7 @@
         "version": "1.0.0"
     },
     "host": "stream.altostream.app",
-    "basePath": "/v1",
+    "basePath": "/api/v1",
     "schemes": [
         "https"
     ],
@@ -14,12 +14,12 @@
         "APIKeyHeader": {
             "type": "apiKey",
             "in": "header",
-            "name": "Authuorization"
+            "name": "access-token"
         },
         "APIKeyBody": {
             "type": "apiKey",
             "in": "query",
-            "name": "token"
+            "name": "access-token"
         }
     },
     "paths": {

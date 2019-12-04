@@ -9,9 +9,9 @@ const artist = require('./api/artist')
 
 
 router.use('/', auth);
-router.use('/song', song);
-router.use('/album', album);
-router.use('/artist', artist);
+router.use('/song', authCheck,song);
+router.use('/album', authCheck, album);
+router.use('/artist', authCheck, artist);
 
 
 // 404 response

@@ -47,7 +47,6 @@ let controller = {
         return next(err)
       }
     },
-    
 
     register:(req, res) => {
       try {
