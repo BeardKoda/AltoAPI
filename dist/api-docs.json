@@ -218,7 +218,7 @@
                 "playlist"
             ]
         },
-        "Songs": {
+        "Song": {
             "type": "object",
             "properties": {
                 "id": {
