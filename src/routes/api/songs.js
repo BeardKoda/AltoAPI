@@ -5,9 +5,7 @@ var router = express.Router();
 var SongController 	= require('../../app/controllers/SongController');
 
 // login routes
-router.get('/hot', SongController.hot);
-router.get('/trending', SongController.trending);
-router.get('/featured', SongController.featured);
+router.get('/', SongController.getByLevel);
 router.get('/:id', SongController.getById);
 router.post('/fav/add/:id', SongController.addToFav)
 router.post('/fav/remove/:id', SongController.removeFromFav)

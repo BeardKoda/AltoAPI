@@ -22,8 +22,12 @@ let controller = {
         )
         // return res.send('Welcome');
     },
-    hot:async(req, res)=>{
+    getByLevel:async(req, res)=>{
         // return res.send(req.query);
+        let type = parseInt(req.query.type)
+        if(!type){
+            res.status(401).json({data: "No song type specified"});
+        }
         try{
             const data = await models.Song.findAndCountAll();
             let page = req.query.page;      // page number
@@ -36,7 +40,7 @@ let controller = {
                 where: {
                     status: 1,
                     is_deleted:0,
-                    level:"hot"
+                    level:type
                 },
                 $sort: { id: 1 }
             });
@@ -51,62 +55,62 @@ let controller = {
             res.status(500).json({data:"Internal Server Error"});
         } 
     }, 
-    trending:async(req, res)=>{
-        try{
-            const data = await Song.findAndCountAll();
-            let page = req.query.page;      // page number
-            let pages = Math.ceil(data.count / limit);
-            offset = limit * (page - 1) || 0;
-            const songs = await models.Song.findAll({
-                attributes: ['id', 'title'],
-                limit: limit,
-                offset: offset,
-                where: {
-                    status: 1,
-                    is_deleted:0,
-                    level:"trending"
-                },
-                $sort: { id: 1 }
-            });
-            let response = {
-                page,
-                pages,
-                offset,
-                songs
-            };
-            return res.status(200).json({data:response});
-        }catch(err){
-            res.status(500).json({data:"Internal Server Error"});
-        }
-    }, 
-    featured:async(req, res)=>{
-        try{
-            const data = await Song.findAndCountAll();
-            let page = req.query.page;      // page number
-            let pages = Math.ceil(data.count / limit);
-            offset = limit * (page - 1) || 0;
-            const songs = await models.Song.findAll({
-                attributes: ['id', 'title'],
-                limit: limit,
-                offset: offset,
-                where: {
-                    status: 1,
-                    is_deleted:0,
-                    level:"featured"
-                },
-                $sort: { id: 1 }
-            });
-            let response = {
-                page,
-                pages,
-                offset,
-                songs
-            };
-            return res.status(200).json({data:response});
-        }catch(err){
-            res.status(500).json({data:"Internal Server Error"});
-        }
-    },
+    // trending:async(req, res)=>{
+    //     try{
+    //         const data = await Song.findAndCountAll();
+    //         let page = req.query.page;      // page number
+    //         let pages = Math.ceil(data.count / limit);
+    //         offset = limit * (page - 1) || 0;
+    //         const songs = await models.Song.findAll({
+    //             attributes: ['id', 'title'],
+    //             limit: limit,
+    //             offset: offset,
+    //             where: {
+    //                 status: 1,
+    //                 is_deleted:0,
+    //                 level:"trending"
+    //             },
+    //             $sort: { id: 1 }
+    //         });
+    //         let response = {
+    //             page,
+    //             pages,
+    //             offset,
+    //             songs
+    //         };
+    //         return res.status(200).json({data:response});
+    //     }catch(err){
+    //         res.status(500).json({data:"Internal Server Error"});
+    //     }
+    // }, 
+    // featured:async(req, res)=>{
+    //     try{
+    //         const data = await Song.findAndCountAll();
+    //         let page = req.query.page;      // page number
+    //         let pages = Math.ceil(data.count / limit);
+    //         offset = limit * (page - 1) || 0;
+    //         const songs = await models.Song.findAll({
+    //             attributes: ['id', 'title'],
+    //             limit: limit,
+    //             offset: offset,
+    //             where: {
+    //                 status: 1,
+    //                 is_deleted:0,
+    //                 level:"featured"
+    //             },
+    //             $sort: { id: 1 }
+    //         });
+    //         let response = {
+    //             page,
+    //             pages,
+    //             offset,
+    //             songs
+    //         };
+    //         return res.status(200).json({data:response});
+    //     }catch(err){
+    //         res.status(500).json({data:"Internal Server Error"});
+    //     }
+    // },
     addToFav:async(req, res)=>{
         let uid = parseInt(req.params.id)
         // return res.send(req.params.id);ss

@@ -141,7 +141,7 @@
                 }
             }
         },
-        "/song/hot": {
+        "/song": {
             "get": {
                 "summary": "Fetch Hot Songs.",
                 "description": "Fetches All the Songs on the Hot List.",
@@ -154,31 +154,19 @@
                 "tags": [
                     "Songs"
                 ],
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "success",
-                        "schema": {
-                            "$ref": "#/definitions/Song"
-                        }
-                    }
-                }
-            }
-        },
-        "/song/featured": {
-            "get": {
-                "summary": "Fetch Featured Songs.",
-                "description": "Fetches All the Songs on the Featured List.",
-                "security": [
+                "parameters": [
                     {
-                        "APIKeyHeader": [],
-                        "APIKeyBody": []
+                        "in": "query",
+                        "name": "type",
+                        "type": "string",
+                        "description": "Type of Song to Fetch"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "type": "integer",
+                        "description": "The page number you are fetch"
                     }
-                ],
-                "tags": [
-                    "Songs"
                 ],
                 "produces": [
                     "application/json"
@@ -207,6 +195,9 @@
                 "email": {
                     "type": "string"
                 },
+                "favourites": {
+                    "type": "object"
+                },
                 "playlist": {
                     "type": "object"
                 }
@@ -227,8 +218,8 @@
                 "title": {
                     "type": "string"
                 },
-                "artist":{
-                    "type":"object"
+                "artist": {
+                    "type": "object"
                 },
                 "url": {
                     "type": "string"
