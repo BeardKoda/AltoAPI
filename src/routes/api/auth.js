@@ -3,12 +3,16 @@ var router = express.Router();
 // custom controllers
 var AuthController 	= require('../../app/controllers/AuthController');
 var Request = require('../../app/requests/AuthRequest')
-var authCheck = require("../../app/middlewares/authrequest")
+
+router.post('/', function (req, res) {
+  res.send("Hello World")
+});
 
 // login routes
 router.post('/login', Request.validate('login'), AuthController.login);
-router.post('/register', Request.validate('register'), AuthController.register);
-router.get('/profile', authCheck, AuthController.getData);
+router.post('/register', AuthController.register);
+// router.get('/login', LoginController.index);
+router.get('/profile', AuthController.getData);
 
 // 404 response
 router.get('*', function(req, res){
