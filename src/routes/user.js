@@ -20,7 +20,6 @@ const userRoute = (user)=>{
             secure:IN_PROD
         }
     }))
-    user.post('/upload-avatar', UploadController.upload);
     user.post('/login', Request.validate('login'), AuthController.login);
     user.post('/register', Request.validate('register'), AuthController.register);
     user.get('/profile', auth, AuthController.getData);
@@ -31,6 +30,8 @@ const userRoute = (user)=>{
     user.get('/song/:id', SongController.getById);
     user.post('/song/fav/add/:id', SongController.addToFav)
     user.post('/song/fav/remove/:id', SongController.removeFromFav)
+    user.post('/song/upload', auth, UploadController.upload)
+    user.post('/song/update/:id',auth, UploadController.uploadData)
 
     // get Playlist API
     user.get('/playlist/all', PlaylistController.all);
@@ -39,6 +40,7 @@ const userRoute = (user)=>{
     user.post('/playlist/delete', PlaylistController.deletePlaylist);
 
     // get Artist API
+    user.post('/artist/register', auth, ArtistController.register)
     user.get('/artist/all', ArtistController.all);
     user.get('/artist/:id', ArtistController.getById);
 

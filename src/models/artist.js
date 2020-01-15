@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
+    user_id:{
+      type:DataTypes.INTEGER,
+      allowNull:false
+    },
     name:{
       type: DataTypes.STRING,
       allowNull: false
@@ -50,6 +54,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Artist.associate = function(models) {
     // // associations can be defined here
+    Artist.hasOne(models.Song, {as: 'user', foreignKey:'id'})
     Artist.hasMany(models.Song, {as: 'songs', foreignKey:'artist_id'})
     Artist.hasMany(models.Album, {as: 'albums', foreignKey:'artist_id'})
   };

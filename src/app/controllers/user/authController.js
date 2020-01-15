@@ -20,14 +20,14 @@ let controller = {
         models.User.findOne({where:{email:data.email}}).then(
           user => {
             if(!user){
-              res.status(404).json({
-                res:"user not found"
+              res.status(422).json({
+                message:"user not found"
               })
             }
             if(user){
               var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
               if(!passwordIsValid) return res.status(401).json({
-                res:"Unauthorized"
+                message:"Wrong credientials"
               })
               if(passwordIsValid){
                 req.session.user = user
@@ -98,6 +98,7 @@ let controller = {
       var data = {
         "username" : user.name,
         "email":user.email,
+        "is_artist":user.is_artist,
         "token":token,
         "token_type":"jwt",
         "expiresIn":86400
@@ -121,6 +122,6 @@ let controller = {
       return res.status(200).json({user:null, message:"logged out successfully"})
       }
       return res.status(202).json({user:null, message:"logged out successfully"})
-    }
+    },
 }
 module.exports = controller

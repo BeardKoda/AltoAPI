@@ -53,6 +53,40 @@ let controller = {
                 return res.status(200).json({data:data});
               }
         )
+    },
+    register:async(req, res, next)=>{
+        saved = res.user
+        try{
+        data = await models.User.findOne({id:saved.id})
+        // console.log(data.email, "here")
+            models.Artist.findOne({where:{email:data.email}}).then(user => {
+                if(!user){
+                models.Artist.create({name : data.name, email : data.email,user_id:saved.id, password : data.password, status:"active", premium:0,is_deleted:false}).then((user) => {
+                    if(user){
+                        models.User.update({is_artist:true},{where:{id:saved.id}}).then(data=>{
+                            return res.status(200).json({ response: "Registered as artist"});
+                        })
+                    }
+                    },
+                    (err) => {
+                        console.log(err)
+                    return res.status(500).json("There was a problem creating as artist.")
+                    })
+                }
+                if(user){
+                res.status(401).json({
+                    res:"Artist already exits"
+                })
+                }
+                },err => {
+                res.status(500).json({
+                    error: err
+                })
+            })
+        }catch(err) {
+            console.log(err)
+            return res.status(422).json({error:err})
+        }
     }
 }
 module.exports = controller;

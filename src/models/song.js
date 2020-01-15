@@ -9,60 +9,74 @@ module.exports = (sequelize, DataTypes) => {
     },
     title:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true,
+      default:" "
     },
     artist_id:{
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      default:" "
     },
     price:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true,
+      default:" "
     },
     genre:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true,
+      default:" "
     },
     year:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true,
+      default:" "
     },
     track_url:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      default:" "
     },
     privacy:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true,
+      default:" "
     },
     type:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true,
+      default:" "
     },
     status:{
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true,
+      default:" "
     },
     level:{
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      default:" "
     },
     album_id:{
       type: DataTypes.STRING,
-      allowNull: false,
-      foreignKey:true
+      allowNull: true,
+      foreignKey:true,
+      default:" "
     },
     duration:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true,
+      default:" "
     },
     is_deleted:{
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true,
+      default:" "
     },
     cover_img:{
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true,
+      default:" "
     },
   }, {
     underscored: true,

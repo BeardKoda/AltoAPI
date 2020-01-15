@@ -33,7 +33,11 @@ module.exports = (sequelize, DataTypes) => {
     cover_img:{
       type:DataTypes.STRING,
       allowNull:true
-    }    
+    },
+    is_artist:{
+      type:DataTypes.STRING,
+      allowNull:true
+    }   
   }, {
     tableName:'users',
     underscored: true,
@@ -42,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   User.associate = function(models) {
     // associations can be defined here
+    User.belongsTo(models.Artist, {as: 'artist', foreignKey: 'id', targetKey: 'user_id',})
   };
   return User;
 };
