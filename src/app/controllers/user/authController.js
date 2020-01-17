@@ -3,7 +3,7 @@ var jwt = require('jsonwebtoken');
 var config = require('../../../config/jwt')
 var bcrypt = require('bcryptjs');
 var auth = require('../../middlewares/user/authMiddleware')
-
+const uuidv1 = require('uuid/v1');
 var models = require('../../../models');
 
 /* GET actorController. */
@@ -65,6 +65,7 @@ let controller = {
         if(!user){
           models.User.create({
             name : data.name, email : data.email, password : hashedPassword, status:"active", premium:0,
+            uuid:uuidv1()
           }).then((user) => {
               var token =  controller.getToken(user)
               req.session.user = user
