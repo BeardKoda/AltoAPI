@@ -78,12 +78,12 @@ let controller = {
         }
         if(user){
           res.status(401).json({
-            res:"user already exits please login "
+            message:"Account already exits please login "
           })
         }
         },err => {
           res.status(500).json({
-            error: err
+            message: err
           })
       })
       }catch(err) {
