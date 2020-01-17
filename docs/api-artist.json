@@ -5,7 +5,6 @@
         "description": "API for the WebApp and MobileApp.",
         "version": "1.0.0"
     },
-    "host": "api.staging.altostream.app",
     "basePath": "/artist/api/v1",
     "schemes": [
         "https"
