@@ -44,10 +44,10 @@ jobs:
             - "bb:44:12:57:7e:fb:dc:f4:48:80:d8:a1:ee:9d:8a:aa"
       - run:
           name: Deploying to staging
-          command: ssh -o StrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "cd /home/staging/api && git pull https://$GITHUB_USER:$GITHUB_PASS@github.com/$GITHUB_USER/alto_stream_auth"
+          command: ssh -o StrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "cd /home/staging/api && git pull https://$GITHUB_USER:$GITHUB_PASS@github.com/$GITHUB_USER/AltoAPI"
       - run:
           name: Installing Node Modules && restarting PM2
-          command: ssh -o StrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "cd /home/staging/api && npm install && pm2 restart 3"
+          command: ssh -o StrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "cd /home/staging/api && npm install && pm2 restart 5"
   deploy-production:
     docker:
       - image: circleci/node:10.12.0
@@ -58,10 +58,10 @@ jobs:
             - "bb:44:12:57:7e:fb:dc:f4:48:80:d8:a1:ee:9d:8a:aa"
       - run:
           name: Deploying to production
-          command: ssh -o StrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "cd /home/production/api && git pull https://$GITHUB_USER:$GITHUB_PASS@github.com/$GITHUB_USER/alto_stream_auth"
+          command: ssh -o StrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "cd /home/production/api && git pull https://$GITHUB_USER:$GITHUB_PASS@github.com/$GITHUB_USER/AltoAPI"
       - run:
           name: Installing Node Modules && restarting PM2
-          command: ssh -o StrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "cd /home/production/api && npm install && pm2 restart 4"
+          command: ssh -o StrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "cd /home/production/api && npm install && pm2 restart 7"
 
 workflows:
   version: 2

@@ -10,6 +10,9 @@ docRoute = (doc)=>{
         let a = req.params.id
         if(a==='user'){
             res.status(200).send(swaggerUi.generateHTML(swaggerDocument))}
+            if (process.env.NODE_ENV === 'development') {
+                swaggerDoc.host="localhost:" + process.env.PORT
+              }
         if(a==='artist'){
             res.status(200).send(swaggerUi.generateHTML(artistJSON)) }
     });
