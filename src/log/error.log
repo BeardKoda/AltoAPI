@@ -49,3 +49,5 @@ a00fb829-35ea-4f0d-828d-38686a2f35f5 [Sat, 18 Jan 2020 22:32:27 GMT] "OPTIONS /u
 5db0415d-1fc9-417c-9a8b-9df89b2c5ce2 [Sat, 18 Jan 2020 22:35:27 GMT] "OPTIONS /user/api/v1/song/upload" 204 0.394
 505430d2-0e3e-4dc2-80ce-184783b26ffe [Sat, 18 Jan 2020 22:36:50 GMT] "OPTIONS /user/api/v1/song/upload" 204 2.043
 3d54b13b-bab1-45e4-8320-a630734b64fa [Sat, 18 Jan 2020 22:36:50 GMT] "POST /user/api/v1/song/upload" 200 142.235
+bdab1356-fc86-4ee6-908b-7416778c8d59 [Sat, 18 Jan 2020 22:43:04 GMT] "OPTIONS /user/api/v1/song/upload" 204 0.712
+459ff277-1fab-4c69-9ca6-b41d1a053d1b [Sat, 18 Jan 2020 22:43:04 GMT] "POST /user/api/v1/song/upload" 200 80.783

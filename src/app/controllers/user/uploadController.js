@@ -26,7 +26,7 @@ let controller = {
                 // const file = fs.readFileSync(music_path)
 
                 // metadata = await mm.parseBuffer(music_path)
-                res.send(true)
+                res.send(true, 'hello')
                 // console.log(avatar, metadata)
                 // S3.upload(file, name,async(err,result)=>{
                 //     if(err){
