@@ -2,6 +2,7 @@ const { body, validationResult } = require('express-validator/check')
 var jwt = require('jsonwebtoken');
 var models = require('../../../models');
 const Song = models.Song;
+const ExtApi = require('../../helpers/api');
 
 let limit = 50;   // number of records per page
 let offset = 0;
@@ -22,6 +23,7 @@ let controller = {
         )
         // return res.send('Welcome');
     },
+
     getByLevel:async(req, res)=>{
         // return res.send(req.query);
         let type = parseInt(req.query.type)
@@ -120,12 +122,20 @@ let controller = {
               }
         )
     },
+
     removeFromFav:async(req, res)=>{
         let uid = parseInt(req.params.id)
         models.Favourite.update({status:false},{where:{id:uid}}).then(data=>{
             return res.status(200).json({data:"Removed from favourite"})
         })
-    } 
+    },
+
+    getAPI:async(req,res)=>{
+        ExtApi.upload('https://veezee.ir/api/v1/get/home-page-collection',(result)=>{
+            // console.log(result)
+            res.status(200).json(result)
+        })
+    }
 }
 
 module.exports = controller;

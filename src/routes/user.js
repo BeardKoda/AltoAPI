@@ -1,7 +1,6 @@
 const cookieParser = require('cookie-parser');
 const session = require('express-session')
 const { NODE_ENV, U_SESS_NAME, U_SESS_LIFETIME, U_SESS_SECRET } = require('../config/app')
-
 const IN_PROD = NODE_ENV === 'production'
 const { AuthController, SongController, ArtistController, PlaylistController, UploadController } = require('../app/controllers/user')
 const path = require('path')
@@ -10,33 +9,36 @@ var auth = require('../app/middlewares/user/authMiddleware')
 // user = express()
 var user = require('express').Router()
 
-// const userRoute = ()=>{
-    user.use(session({
-        name:U_SESS_NAME,
-        resave:false,
-        saveUninitialized:false,
-        secret:U_SESS_SECRET,
-        cookie:{
-            maxAge:parseInt(U_SESS_LIFETIME),
-            sameSite:true,
-            secure:IN_PROD
-        }
-    }))
-
-    user.use('/test', (req, res, next)=>{
-        res.send("hello")
+    user.post('/', (req,res,next)=>{
+        return true
     })
+    user.get('/', (req,res,next)=>{
+        return true
+    })
+    // const userRoute = ()=>{
+    // user.use(session({
+    //     name:U_SESS_NAME,
+    //     resave:false,
+    //     saveUninitialized:false,
+    //     secret:U_SESS_SECRET,
+    //     cookie:{
+    //         maxAge:parseInt(U_SESS_LIFETIME),
+    //         sameSite:true,
+    //         secure:IN_PROD
+    //     }
+    // }))
 
-    user.post('/login', Request.validate('login'), AuthController.login);
-    user.post('/register', Request.validate('register'), AuthController.register);
+    user.post('/login', Request.validate('login'), AuthController.login)
+    user.post('/register', Request.validate('register'), AuthController.register)
     
     // User Auth
-    user.post('/profile', auth, AuthController.getData);
+    user.post('/profile', auth, AuthController.getData)
     user.post('/validate-login', auth, AuthController.refreshToken)
     user.post('/logout', auth, AuthController.logout)
 
     // get All Songs API
     user.get('/song/', SongController.getByLevel);
+    user.get('/get/home-page-collection', SongController.getAPI);
     user.get('/song/:id', SongController.getById);
     user.post('/song/fav/add/:id', SongController.addToFav)
     user.post('/song/fav/remove/:id', SongController.removeFromFav)

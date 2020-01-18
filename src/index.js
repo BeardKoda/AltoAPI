@@ -10,6 +10,10 @@ var methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
 const fileUpload = require('express-fileupload');
+var fs = require('fs')
+var morgan = require('morgan')
+var rfs = require('rotating-file-stream')
+const addRequestId = require('express-request-id')();
 
 const docs = express()
 const app = express()
@@ -17,13 +21,51 @@ const app = express()
 const { PORT } = require('./config/app')
 
 const docRoute = require('./routes/docs.js')
+var appRoute = require('./routes/index.js')
 var userRoute = require('./routes/user.js')
+
+
+// create a rotating write stream
+var accessLogStream = rfs.createStream('access.log', {
+  interval: '1d', // rotate daily
+  path: path.join(__dirname, 'log')
+})
+// create a rotating write stream
+var errorLogStream = rfs.createStream('error.log', {
+  interval: '1d', // rotate daily
+  path: path.join(__dirname, 'log')
+})
+app.use(addRequestId);
+
+morgan.token('id', function getId(req) {
+    return req.id
+});
+
+var loggerFormat = ':id [:date[web]] ":method :url" :status :response-time';
+var EloggerFormat = ':id [:date[web]] ":method :url" :status :response-time';
+
+app.use(morgan(EloggerFormat, {
+    skip: function (req, res) {
+        // console.log(res)
+        return res.statusCode < 400
+    },
+    stream: errorLogStream
+}));
+
+app.use(morgan(loggerFormat, {
+    skip: function (req, res) {
+        return res.statusCode >= 400
+    },
+    stream: accessLogStream
+}));
+
 // const artistRoute = require('./routes/artist.js')
 
 // enable files upload
 app.use(fileUpload({
   createParentPath: true
 }));
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -61,6 +103,7 @@ app.use(function(err, req, res, next) {
 // userRoute()
 // docRoute(docs)
 // artistRoute(artist)
+app.use('/aa', appRoute)
 app.use('/', docRoute)
 app.use('/user/api/v1', userRoute)
 // app.use('/artist/api/v1/', artist)
