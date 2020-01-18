@@ -132,7 +132,7 @@ let controller = {
 
     getAPI:async(req,res)=>{
         ExtApi.upload('https://veezee.ir/api/v1/get/home-page-collection',(result)=>{
-            console.log(result)
+            // console.log(result)
             res.status(200).json(result)
         })
     }
