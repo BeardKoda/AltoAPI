@@ -63,9 +63,9 @@ app.use(morgan(loggerFormat, {
 
 // enable files upload
 app.use(fileUpload({
-  createParentPath: true
+  createParentPath: true,
+  limits: { fileSize: 50 * 1024 * 1024 },
 }));
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
