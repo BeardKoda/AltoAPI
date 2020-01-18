@@ -64,7 +64,8 @@ app.use(morgan(loggerFormat, {
 // enable files upload
 app.use(fileUpload({
   createParentPath: true,
-  limits: { fileSize: 50 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024 },
+  abortOnLimit:true
 }));
 
 app.use(bodyParser.json());
@@ -98,7 +99,7 @@ app.use(function(err, req, res, next) {
   
     // render the error page
     res.status(err.status || 500).json({error:err.message});
-  });
+});
 
 // userRoute()
 // docRoute(docs)
