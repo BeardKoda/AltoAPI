@@ -32,7 +32,7 @@ var user = require('express').Router()
     
     // User Auth
     user.post('/profile', auth, AuthController.getData);
-    user.post('/verify-token', auth, AuthController.verifyToken)
+    user.post('/validate-login', auth, AuthController.refreshToken)
     user.post('/logout', auth, AuthController.logout)
 
     // get All Songs API

@@ -107,21 +107,17 @@ let controller = {
       return data
     },
     
-    getData:(req, res)=>{  
+    refreshToken:(req, res)=>{  
       var token = res.user;
       models.User.findOne({id:token.id}).then(
         user =>{
-          data ={
-            "username" : user.name,
-            "email":user.email,
-            "is_artist":user.is_artist,
-          }
+          data = controller.getToken(user)
           res.status(200).json({response:data, val:token});
         }
       )
     },
 
-    verifyToken:(req, res,next)=>{
+    getData:(req, res,next)=>{
       // res.status(200).json(true);
       res.status(200).json({ message: true });
       return;
