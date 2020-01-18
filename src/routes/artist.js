@@ -9,7 +9,6 @@ var Request = require('../app/requests/authRequest')
 var auth = require('../app/middlewares/artist/authMiddleware')
 
 const userRoute = (artist)=>{
-    
     artist.use(session({
         name:A_SESS_NAME,
         resave:false,

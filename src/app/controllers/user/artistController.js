@@ -1,5 +1,6 @@
 
 var models = require('../../../models');
+const uuidv1 = require('uuid/v1');
 
 let limit = 50;   // number of records per page
 let offset = 0;
@@ -61,7 +62,7 @@ let controller = {
         // console.log(data.email, "here")
             models.Artist.findOne({where:{email:data.email}}).then(user => {
                 if(!user){
-                models.Artist.create({name : data.name, email : data.email,user_id:saved.id, password : data.password, status:"active", premium:0,is_deleted:false}).then((user) => {
+                models.Artist.create({name : data.name, email : data.email,user_id:saved.id, password : data.password, status:"active", premium:0,is_deleted:false, uuid:uuidv1()}).then((user) => {
                     if(user){
                         models.User.update({is_artist:true},{where:{id:saved.id}}).then(data=>{
                             return res.status(200).json({ response: "Registered as artist"});
