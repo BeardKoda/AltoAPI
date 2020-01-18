@@ -20,13 +20,14 @@ let controller = {
             try {
                 let avatar = req.files.audio;
                 let name = artist.uuid+'/music/'+Date.now()+'_'+avatar.name;
-                // let music_path = 'src/public/uploads/'+name
+                let music_path = 'src/public/uploads/'+name
                 
-                // await avatar.mv(music_path)
+                await avatar.mv(music_path)
+                const file = fs.readFileSync(music_path)
 
-                metadata = await mm.parseBuffer(avatar.data)
-                console.log(avatar, metadata)
-                S3.upload(avatar.data, name,async(err,result)=>{
+                metadata = await mm.parseBuffer(music_path)
+                // console.log(avatar, metadata)
+                S3.upload(file, name,async(err,result)=>{
                     if(err){
                         console.log(err)
                         res.status(422).json({
@@ -69,7 +70,9 @@ let controller = {
             let name = artist.uuid+'/images/'+Date.now()+'_'+avatar.name;
             image_path = `src/public/uploads/`+name
             // await avatar.mv(`src/public/uploads/` + name);
-            S3.upload(avatar.data, name,async(err,result)=>{
+            await avatar.mv(image_path)
+            const file = fs.readFileSync(image_path)
+            S3.upload(file, name,async(err,result)=>{
                 if(err){
                     // console.log(err)
                     res.status(422).json({
