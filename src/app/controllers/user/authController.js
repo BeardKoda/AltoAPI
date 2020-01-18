@@ -111,7 +111,12 @@ let controller = {
       var token = res.user;
       models.User.findOne({id:token.id}).then(
         user =>{
-          res.status(200).json({user:user, val:token});
+          data ={
+            "username" : user.name,
+            "email":user.email,
+            "is_artist":user.is_artist,
+          }
+          res.status(200).json({response:data, val:token});
         }
       )
     },
