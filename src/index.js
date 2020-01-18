@@ -47,14 +47,14 @@ var EloggerFormat = ':id [:date[web]] ":method :url" :status :response-time';
 app.use(morgan(EloggerFormat, {
     skip: function (req, res) {
         // console.log(res)
-        return res.statusCode < 400
+        return res.statusCode >= 400
     },
     stream: errorLogStream
 }));
 
 app.use(morgan(loggerFormat, {
     skip: function (req, res) {
-        return res.statusCode >= 400
+        return res.statusCode < 400
     },
     stream: accessLogStream
 }));

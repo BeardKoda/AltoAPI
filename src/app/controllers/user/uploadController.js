@@ -25,7 +25,7 @@ let controller = {
                 // await avatar.mv(music_path)
 
                 metadata = await mm.parseBuffer(avatar.data)
-                // console.log(avatar, metadata)
+                console.log(avatar, metadata)
                 S3.upload(avatar.data, name,async(err,result)=>{
                     if(err){
                         console.log(err)
@@ -34,7 +34,7 @@ let controller = {
                             data:null
                         })
                     }
-                    // console.log(result)
+                    console.log(result)
                     models.Song.create({artist_id: artist.id, track_url:name, title:metadata.common.title, year:metadata.common.year, duration:metadata.format.duration, }).then((data) =>{
                         //send response
                         res.status(200).json({

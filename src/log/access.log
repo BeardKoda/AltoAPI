@@ -32,3 +32,10 @@ aab38593-6ac1-40f8-a817-5b93bfd6fc63 [Sat, 18 Jan 2020 17:49:44 GMT] "GET /user/
 9430b5c8-6f66-42dd-b8c1-83db4ff7a61c [Sat, 18 Jan 2020 17:55:44 GMT] "GET /user/api/v1/discover" 200 444.251
 1a5ac7fb-6080-4da6-b700-a36986158615 [Sat, 18 Jan 2020 17:56:35 GMT] "GET /user/api/v1/discover" 200 265.228
 4083a165-7475-44d7-b469-c64a0972b4e5 [Sat, 18 Jan 2020 17:57:59 GMT] "GET /user/api/v1/discover" 200 349.964
+734f2169-eef3-4234-9d48-82482c4a61d2 [Sat, 18 Jan 2020 18:24:46 GMT] "GET /user/api/v1/get/home-page-collection" 200 750.469
+8cbd479a-c0dc-4e8f-9f71-16225d0a6ca7 [Sat, 18 Jan 2020 19:31:44 GMT] "OPTIONS /user/api/v1/logout" 204 2.464
+209e6652-c107-4cca-8559-409ffd1f8656 [Sat, 18 Jan 2020 19:31:44 GMT] "POST /user/api/v1/logout" 202 9.541
+b22fa4d0-080b-434c-a25b-ce9bc979d477 [Sat, 18 Jan 2020 19:53:46 GMT] "OPTIONS /user/api/v1/login" 204 2.023
+d5fb40ff-9676-4a17-968b-2a8f45fbd382 [Sat, 18 Jan 2020 19:53:46 GMT] "POST /user/api/v1/login" 200 135.159
+401c28fd-5c2e-451b-ac3b-fc7dcaeb42ca [Sat, 18 Jan 2020 19:54:09 GMT] "OPTIONS /user/api/v1/song/upload" 204 0.136
+7f37e356-ecdf-4db4-b847-064ee2406058 [Sat, 18 Jan 2020 19:55:42 GMT] "POST /user/api/v1/song/upload" 200 92041.252

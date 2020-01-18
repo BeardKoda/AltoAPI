@@ -3,4 +3,5 @@ node_modules
 src/config/config.json
 kepo
 src/public
-package.lock.json
+package-lock.json
+src/log
