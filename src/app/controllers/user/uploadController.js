@@ -9,7 +9,7 @@ const S3 = require('../../helpers/s3')
 /* GET actorController. */
 let controller = {
     upload:async (req, res) => {
-        let artist = await models.Artist.findOne({where:{user_id:res.user.id}});
+        const artist = await models.Artist.findOne({where:{user_id:res.user.id}});
         if (!req.files || Object.keys(req.files).length === 0) {
             return res.status(400).json({message:'No files were uploaded.'});
         }
@@ -63,12 +63,13 @@ let controller = {
     uploadData:async(req,res, next)=>{
         let uid = parseInt(req.params.id)
         const { title, genre, cover, featuring, producers, release, description } = req.body
+        const artist = await models.Artist.findOne({where:{user_id:res.user.id}});
         try{
             let avatar = req.files.cover;
             let name = artist.uuid+'/images/'+Date.now()+'_'+avatar.name;
             image_path = `src/public/uploads/`+name
-            await avatar.mv(`src/public/uploads/` + name);
-            S3.upload(image_path, name,async(err,result)=>{
+            // await avatar.mv(`src/public/uploads/` + name);
+            S3.upload(avatar.data, name,async(err,result)=>{
                 if(err){
                     // console.log(err)
                     res.status(422).json({
@@ -76,7 +77,7 @@ let controller = {
                         data:null
                     })
                 }
-                // console.log(result)
+                // console.log(result, "hhh")
                 data ={title, genre, featuring,producers,release, description, cover_img:name}
                 models.Song.update(data,{where:{id:uid}}).then((resp)=>{
                     res.status(200).json({
@@ -87,6 +88,7 @@ let controller = {
             })
         }catch(err){
             res.status(500).json({data:"Internal Server Error"});
+            throw new Error(err)
         } 
     }
 }

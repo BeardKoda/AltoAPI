@@ -17,11 +17,6 @@ var doc = require('express').Router()
         if(a==='artist'){
             res.status(200).send(swaggerUi.generateHTML(artistJSON)) }
     });
-
-    // 404 response
-    doc.get('*', function(req, res){
-        res.status(404).json({error:'Resource not found'});
-    });
   
 // }
 
