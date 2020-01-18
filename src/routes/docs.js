@@ -2,7 +2,8 @@ var swaggerUi = require('swagger-ui-express')
 var artistJSON =require('../../docs/api-artist.json')
 var swaggerDocument = require('../../docs/api-user.json');
 
-docRoute = (doc)=>{
+var doc = require('express').Router()
+// docRoute = (doc)=>{
     doc.get('/', (req,res)=>{
         res.redirect('/docs/user/v1')
     })
@@ -22,6 +23,6 @@ docRoute = (doc)=>{
         res.status(404).json({error:'Resource not found'});
     });
   
-}
+// }
 
-module.exports = docRoute
+module.exports = doc

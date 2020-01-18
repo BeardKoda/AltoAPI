@@ -116,6 +116,12 @@ let controller = {
       )
     },
 
+    verifyToken:(req, res,next)=>{
+      // res.status(200).json(true);
+      res.status(200).json({ message: true });
+      return;
+    },
+
     logout:(req, res)=>{
       if(req.session.user){
         req.session.user =null

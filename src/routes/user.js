@@ -7,8 +7,10 @@ const { AuthController, SongController, ArtistController, PlaylistController, Up
 const path = require('path')
 var Request = require('../app/requests/authRequest')
 var auth = require('../app/middlewares/user/authMiddleware')
+// user = express()
+var user = require('express').Router()
 
-const userRoute = (user)=>{
+// const userRoute = ()=>{
     user.use(session({
         name:U_SESS_NAME,
         resave:false,
@@ -20,9 +22,17 @@ const userRoute = (user)=>{
             secure:IN_PROD
         }
     }))
+
+    user.use('/test', (req, res, next)=>{
+        res.send("hello")
+    })
+
     user.post('/login', Request.validate('login'), AuthController.login);
     user.post('/register', Request.validate('register'), AuthController.register);
-    user.get('/profile', auth, AuthController.getData);
+    
+    // User Auth
+    user.post('/profile', auth, AuthController.getData);
+    user.post('/verify-token', auth, AuthController.verifyToken)
     user.post('/logout', auth, AuthController.logout)
 
     // get All Songs API
@@ -45,10 +55,10 @@ const userRoute = (user)=>{
     user.get('/artist/:id', ArtistController.getById);
 
     // 404 response
-    user.get('*', function(req, res){
-    res.status(404).json({error:'Resource not found'});
+    user.get('**', function(req, res){
+        res.status(404).json({error:'Resource not found'});
     });
   
-}
+// }
 
-module.exports = userRoute;
+module.exports = user;

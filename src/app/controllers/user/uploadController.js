@@ -20,13 +20,13 @@ let controller = {
             try {
                 let avatar = req.files.audio;
                 let name = artist.uuid+'/music/'+Date.now()+'_'+avatar.name;
-                let music_path = 'src/public/uploads/'+name
-                console.log("jjj")
-                await avatar.mv(music_path)
+                // let music_path = 'src/public/uploads/'+name
+                
+                // await avatar.mv(music_path)
 
-                metadata = await mm.parseFile(music_path)
-
-                S3.upload(music_path, name,async(err,result)=>{
+                metadata = await mm.parseBuffer(avatar.data)
+                // console.log(avatar, metadata)
+                S3.upload(avatar.data, name,async(err,result)=>{
                     if(err){
                         console.log(err)
                         res.status(422).json({

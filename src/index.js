@@ -11,16 +11,14 @@ const cors = require('cors');
 const helmet = require('helmet');
 const fileUpload = require('express-fileupload');
 
-const app = express()
 const docs = express()
-const user = express()
-const artist = express()
-const { APP_NAME, USER_URL, ARTIST_URL, PORT } = require('./config/app')
+const app = express()
 
-const appRoute = require('./index.js')
+const { PORT } = require('./config/app')
+
 const docRoute = require('./routes/docs.js')
-const userRoute = require('./routes/user.js')
-const artistRoute = require('./routes/artist.js')
+var userRoute = require('./routes/user.js')
+// const artistRoute = require('./routes/artist.js')
 
 // enable files upload
 app.use(fileUpload({
@@ -60,13 +58,13 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500).json({error:err.message});
   });
 
-app.use('/', docs)
-app.use('/user/api/v1/', user)
-app.use('/artist/api/v1/', artist)
+// userRoute()
+// docRoute(docs)
+// artistRoute(artist)
+app.use('/', docRoute)
+app.use('/user/api/v1', userRoute)
+// app.use('/artist/api/v1/', artist)
 
-docRoute(docs)
-userRoute(user)
-artistRoute(artist)
 
 var server = app.listen(PORT, function () {
     console.log("app running on port.", server.address().port);
