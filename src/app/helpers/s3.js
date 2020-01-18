@@ -3,6 +3,7 @@ const { S3_BUCKET } = require('../../config/app')
 const fs = require('fs');
 
 exports.upload = (file, filename, callback) => {
+    console.log(file)
     // const file=fs.readFileSync(filePath)
     // Setting up S3 upload parameters
     const params = {
