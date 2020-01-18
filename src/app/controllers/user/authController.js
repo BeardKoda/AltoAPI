@@ -109,8 +109,9 @@ let controller = {
     
     refreshToken:(req, res)=>{  
       var token = res.user;
-      models.User.findOne({id:token.id}).then(
+      models.User.findOne({where:{id:token.id}}).then(
         user =>{
+      // console.log(res.user.id, user)
           data = controller.getToken(user)
           res.status(200).json({response:data, val:token});
         }
