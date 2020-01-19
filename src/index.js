@@ -9,7 +9,7 @@ var expressValidator = require("express-validator");
 var methodOverride = require('method-override');
 const cors = require('cors');
 const helmet = require('helmet');
-// const fileUpload = require('express-fileupload');
+const fileUpload = require('express-fileupload');
 var fs = require('fs')
 var morgan = require('morgan')
 var rfs = require('rotating-file-stream')
@@ -62,11 +62,11 @@ app.use(morgan(loggerFormat, {
 // const artistRoute = require('./routes/artist.js')
 
 // enable files upload
-// app.use(fileUpload({
-//   createParentPath: true,
-//   limits: { fileSize: 10 * 1024 * 1024 },
-//   abortOnLimit:true
-// }));
+app.use(fileUpload({
+  createParentPath: true,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  abortOnLimit:true
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
