@@ -68,7 +68,7 @@ let controller = {
             let name = artist.uuid+'/images/'+Date.now()+'_'+avatar.name;
             image_path = `src/public/uploads/`+name
             // await avatar.mv(`src/public/uploads/` + name);
-            await avatar.mv(image_path)
+            // await avatar.mv(image_path)
             const file = avatar.data
             S3.upload(file, name,async(err,result)=>{
                 if(err){
