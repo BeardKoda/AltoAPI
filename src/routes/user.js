@@ -46,7 +46,7 @@ var user = require('express').Router()
     user.post('/song/fav/add/:id', SongController.addToFav)
     user.post('/song/fav/remove/:id', SongController.removeFromFav)
 
-    user.post('/song/upload', auth, uploadM.single('audio'), UploadController.upload)
+    user.post('/song/upload', auth, UploadController.upload)
     user.post('/song/update/:id',auth,uploadM.single('cover'), UploadController.uploadData)
 
     // get Playlist API
