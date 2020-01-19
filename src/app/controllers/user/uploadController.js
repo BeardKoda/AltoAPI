@@ -27,13 +27,13 @@ let controller = {
                 metadata = await mm.parseBuffer(avatar.data)
                 S3.upload(avatar.data, name,async(err,result)=>{
                     if(err){
-                        console.log(err)
+                        // console.log(err)
                         res.status(422).json({
                             message:'An Error Occurred',
-                            data:null
+                            data:err
                         })
                     }
-                    console.log(result)
+                    // console.log(result)
                     models.Song.create({artist_id: artist.id, track_url:name, title:metadata.common.title, year:metadata.common.year, duration:metadata.format.duration, }).then((data) =>{
                         //send response
                         res.status(200).json({
@@ -48,7 +48,7 @@ let controller = {
                             }
                         })
                     }, err=>{
-                        console.log(err)
+                        // console.log(err)
                         res.status(422).json({
                             message:"an Error occurred"
                         })
