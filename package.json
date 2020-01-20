@@ -6,8 +6,8 @@
   "author": "BeardKoda",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon src/index.js",
-    "serve": "node src/index.js"
+    "serve": "nodemon src/index.js",
+    "start": "node src/index.js"
   },
   "keywords": [],
   "dependencies": {

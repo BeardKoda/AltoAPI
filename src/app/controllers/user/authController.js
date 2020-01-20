@@ -113,7 +113,7 @@ let controller = {
         user =>{
       // console.log(res.user.id, user)
           data = controller.getToken(user)
-          res.status(200).json({response:data, val:token});
+          res.status(200).json({response:data});
         }
       )
     },
