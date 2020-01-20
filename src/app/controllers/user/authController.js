@@ -132,5 +132,9 @@ let controller = {
       }
       return res.status(202).json({user:null, message:"logged out successfully"})
     },
+    ping:(req, res, next)=>{
+      console.log('ping')
+      return res.status(200).json({user:null, message:"still active"})
+  }
 }
 module.exports = controller

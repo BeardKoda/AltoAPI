@@ -35,6 +35,7 @@ var user = require('express').Router()
     // User Auth
     user.post('/profile', auth, AuthController.getData)
     user.post('/validate-login', auth, AuthController.refreshToken)
+    user.get('/ping', auth, AuthController.ping)
     user.post('/logout', auth, AuthController.logout)
 
     // get All Songs API
