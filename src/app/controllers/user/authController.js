@@ -113,7 +113,7 @@ let controller = {
         user =>{
       // console.log(res.user.id, user)
           data = controller.getToken(user)
-          res.status(200).json({response:data, val:token});
+          res.status(200).json({response:data});
         }
       )
     },
@@ -132,5 +132,9 @@ let controller = {
       }
       return res.status(202).json({user:null, message:"logged out successfully"})
     },
+    ping:(req, res, next)=>{
+      console.log('ping')
+      return res.status(200).json({user:null, message:"still active"})
+  }
 }
 module.exports = controller

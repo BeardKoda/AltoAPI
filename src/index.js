@@ -47,14 +47,14 @@ var EloggerFormat = ':id [:date[web]] ":method :url" :status :response-time';
 app.use(morgan(EloggerFormat, {
     skip: function (req, res) {
         // console.log(res)
-        return res.statusCode < 400
+        return res.statusCode >= 400
     },
     stream: errorLogStream
 }));
 
 app.use(morgan(loggerFormat, {
     skip: function (req, res) {
-        return res.statusCode >= 400
+        return res.statusCode < 400
     },
     stream: accessLogStream
 }));
@@ -63,9 +63,10 @@ app.use(morgan(loggerFormat, {
 
 // enable files upload
 app.use(fileUpload({
-  createParentPath: true
+  createParentPath: true,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  abortOnLimit:true
 }));
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -98,7 +99,7 @@ app.use(function(err, req, res, next) {
   
     // render the error page
     res.status(err.status || 500).json({error:err.message});
-  });
+});
 
 // userRoute()
 // docRoute(docs)

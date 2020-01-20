@@ -6,6 +6,7 @@ const { AuthController, SongController, ArtistController, PlaylistController, Up
 const path = require('path')
 var Request = require('../app/requests/authRequest')
 var auth = require('../app/middlewares/user/authMiddleware')
+var multer  = require('multer')
 // user = express()
 var user = require('express').Router()
 
@@ -34,6 +35,7 @@ var user = require('express').Router()
     // User Auth
     user.post('/profile', auth, AuthController.getData)
     user.post('/validate-login', auth, AuthController.refreshToken)
+    user.get('/ping', auth, AuthController.ping)
     user.post('/logout', auth, AuthController.logout)
 
     // get All Songs API
@@ -42,6 +44,7 @@ var user = require('express').Router()
     user.get('/song/:id', SongController.getById);
     user.post('/song/fav/add/:id', SongController.addToFav)
     user.post('/song/fav/remove/:id', SongController.removeFromFav)
+
     user.post('/song/upload', auth, UploadController.upload)
     user.post('/song/update/:id',auth, UploadController.uploadData)
 

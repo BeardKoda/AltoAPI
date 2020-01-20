@@ -9,7 +9,9 @@ const S3 = require('../../helpers/s3')
 /* GET actorController. */
 let controller = {
     upload:async (req, res) => {
+        // console.log(res.user)
         const artist = await models.Artist.findOne({where:{user_id:res.user.id}});
+        // console.log(artist)
         if (!req.files || Object.keys(req.files).length === 0) {
             return res.status(400).json({message:'No files were uploaded.'});
         }
@@ -22,39 +24,36 @@ let controller = {
                 let name = artist.uuid+'/music/'+Date.now()+'_'+avatar.name;
                 // let music_path = 'src/public/uploads/'+name
                 
-                // await avatar.mv(music_path)
-
                 metadata = await mm.parseBuffer(avatar.data)
-                // console.log(avatar, metadata)
-                S3.upload(avatar.data, name,async(err,result)=>{
-                    if(err){
-                        console.log(err)
-                        res.status(422).json({
-                            message:'An Error Occurred',
-                            data:null
-                        })
-                    }
-                    // console.log(result)
-                    models.Song.create({artist_id: artist.id, track_url:name, title:metadata.common.title, year:metadata.common.year, duration:metadata.format.duration, }).then((data) =>{
-                        //send response
-                        res.status(200).json({
-                            status:"finished",
-                            message: 'File is uploaded',
-                            data: {
-                                song:data,
-                                name: avatar.name,
-                                mimetype: avatar.mimetype,
-                                size: avatar.size,
-                                // cover_img:JSON.stringify(metadata.common.picture)
-                            }
-                        })
-                    }, err=>{
-                        console.log(err)
-                        res.status(422).json({
-                            message:"an Error occurred"
-                        })
-                    })
-                })
+                // S3.upload(avatar.data, name,async(err,result)=>{
+                //     if(err){
+                //         console.log(err)
+                //         res.status(422).json({
+                //             message:'An Error Occurred',
+                //             data:err
+                //         })
+                //     }
+                //     console.log(result)
+                //     models.Song.create({artist_id: artist.id, track_url:name, title:metadata.common.title, year:metadata.common.year, duration:metadata.format.duration, }).then((data) =>{
+                //         //send response
+                //         res.status(200).json({
+                //             status:"finished",
+                //             message: 'File is uploaded',
+                //             data: {
+                //                 song:data,
+                //                 name: avatar.name,
+                //                 mimetype: avatar.mimetype,
+                //                 size: avatar.size,
+                //                 // cover_img:JSON.stringify(metadata.common.picture)
+                //             }
+                //         })
+                //     }, err=>{
+                //         // console.log(err)
+                //         res.status(422).json({
+                //             message:"an Error occurred"
+                //         })
+                //     })
+                // })
             } catch (err) {
                 res.status(500).send(err);
             }
@@ -69,7 +68,9 @@ let controller = {
             let name = artist.uuid+'/images/'+Date.now()+'_'+avatar.name;
             image_path = `src/public/uploads/`+name
             // await avatar.mv(`src/public/uploads/` + name);
-            S3.upload(avatar.data, name,async(err,result)=>{
+            // await avatar.mv(image_path)
+            const file = avatar.data
+            S3.upload(file, name,async(err,result)=>{
                 if(err){
                     // console.log(err)
                     res.status(422).json({

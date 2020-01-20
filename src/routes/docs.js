@@ -17,7 +17,6 @@ var doc = require('express').Router()
         if(a==='artist'){
             res.status(200).send(swaggerUi.generateHTML(artistJSON)) }
     });
-  
 // }
 
 module.exports = doc
