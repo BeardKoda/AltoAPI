@@ -40,6 +40,7 @@ var user = require('express').Router()
 
     // get All Songs API
     user.get('/song/', SongController.getByLevel);
+    user.get('/song/all', SongController.getALL);
     user.get('/get/home-page-collection', SongController.getAPI);
     user.get('/song/:id', SongController.getById);
     user.post('/song/fav/add/:id', SongController.addToFav)

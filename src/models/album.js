@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Album.associate = function(models) {
     // // associations can be defined here
-    Album.hasMany(models.Song, {as: 'songs', foreignKey:'album_id', target:'album_id'}),
+    Album.hasMany(models.Song, {as: 'songs', foreignKey:'album', target:'album'}),
     Album.belongsTo (models.Artist, {as: 'artist', foreignKey:'artist_id', target:'artist_id'})
   };
   return Album;

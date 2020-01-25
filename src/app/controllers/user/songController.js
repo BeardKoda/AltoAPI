@@ -25,8 +25,9 @@ let controller = {
     },
 
     getByLevel:async(req, res)=>{
-        // return res.send(req.query);
-        let type = parseInt(req.query.type)
+        // return res.send(req.params);
+        let type = req.params.level
+        // let type = parseInt(req.query.type)
         if(!type){
             res.status(401).json({data: "No song type specified"});
         }
@@ -35,6 +36,7 @@ let controller = {
             let page = req.query.page;      // page number
             let pages = Math.ceil(data.count / limit);
             offset = limit * (page - 1) || 0;
+            console.log(data);
             const songs = await models.Song.findAll({
                 attributes: ['id', 'title'],
                 limit: limit,
@@ -42,7 +44,7 @@ let controller = {
                 where: {
                     status: 1,
                     is_deleted:0,
-                    level:type
+                    // level:type
                 },
                 $sort: { id: 1 }
             });
@@ -54,9 +56,11 @@ let controller = {
             };
             return res.status(200).json({data:response});
         }catch(err){
+            res.send(err)
             res.status(500).json({data:"Internal Server Error"});
         } 
     }, 
+
     // trending:async(req, res)=>{
     //     try{
     //         const data = await Song.findAndCountAll();
@@ -131,10 +135,33 @@ let controller = {
     },
 
     getAPI:async(req,res)=>{
+        // console.log("hello")
         ExtApi.upload('https://veezee.ir/api/v1/get/home-page-collection',(result)=>{
             // console.log(result)
             res.status(200).json(result)
         })
+    },
+
+    getALL:async(req,res)=>{
+        // ExtApi.upload('https://veezee.ir/api/v1/get/home-page-collection',(result)=>{
+        //     // console.log(result)
+        //     res.status(200).json(result)
+        // })
+        const songs = await models.Song.findAll({
+            attributes: ['id', 'title'],
+            limit: limit,
+            offset: offset,
+            where: {
+                status: 1,
+                is_deleted:0,
+                // level:type
+            },
+            $sort: { id: 1 }
+        });
+        let response = {
+            songs
+        };
+        return res.status(200).json({data:response});
     }
 }
 
