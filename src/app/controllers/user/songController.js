@@ -36,7 +36,7 @@ let controller = {
             let page = req.query.page;      // page number
             let pages = Math.ceil(data.count / limit);
             offset = limit * (page - 1) || 0;
-            console.log(data);
+            // console.log(data);
             const songs = await models.Song.findAll({
                 attributes: ['id', 'title'],
                 limit: limit,
@@ -142,26 +142,56 @@ let controller = {
         })
     },
 
-    getALL:async(req,res)=>{
-        // ExtApi.upload('https://veezee.ir/api/v1/get/home-page-collection',(result)=>{
-        //     // console.log(result)
-        //     res.status(200).json(result)
-        // })
-        const songs = await models.Song.findAll({
-            attributes: ['id', 'title'],
-            limit: limit,
-            offset: offset,
+    getSongs:async(req,res)=>{
+        const songs = await models.Song.findAll({attributes:['id', 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'type', 'year', 'price'],
+            limit: 10,
             where: {
                 status: 1,
                 is_deleted:0,
                 // level:type
             },
-            $sort: { id: 1 }
+            $sort: { id: 1 },
+            include: [
+                {model:models.Album, as:'album', attributes:['id', 'title'], include:[
+                    {model:models.Artist, as:'artist', attributes:['id', 'name']}
+                ]}
+            ]
         });
-        let response = {
-            songs
-        };
-        return res.status(200).json({data:response});
+        return res.status(200).json(songs);
+    },
+
+    getALL:async(req,res)=>{
+        const songs = await models.Song.findAll({attributes:['id', 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'type', 'year', 'price'],
+            limit: 10,
+            where: {
+                status: 1,
+                is_deleted:0,
+                // level:type
+            },
+            $sort: { id: 1 },
+            include: [
+                {model:models.Album, as:'album', attributes:['id', 'title'], include:[
+                    {model:models.Artist, as:'artist', attributes:['id', 'name']}
+                ]}
+            ]
+        });
+        const album = await models.Album.findAll({
+            attributes:['id', 'title', 'cover_img', ],
+            limit: 10,
+            where: {
+                status: 1,
+                is_deleted:0,
+                // level:type
+            },
+            include: [
+            ],
+            $sort: { id: 1 },
+        });
+        let response = [
+            { title: "Hot Tracks", type: "Track", trackList:songs},
+            { title: "New Releases", type: "Album", albumList:album}
+        ]
+        return res.status(200).json(response);
     }
 }
 

@@ -1,7 +1,7 @@
 const AuthController = require('./authController')
 const SongController = require('./songController')
 const PlaylistController = require('./playlistController')
-const ArtistController = require('./artistController')
+const ArtistController = require('./artist/artistController')
 const UploadController = require('./uploadController')
 
 module.exports = {

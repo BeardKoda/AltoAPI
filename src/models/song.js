@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       default:" "
     },
-    album:{
+    album_id:{
       type: DataTypes.STRING,
       allowNull: true,
       foreignKey:true,
@@ -101,7 +101,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Song.associate = function(models) {
     // associations can be defined here
-    // Song.belongsTo(models.Album, {as: 'album', foreignKey: 'album', targetKey: 'id',})
+    Song.belongsTo(models.Album, {as: 'album', foreignKey: 'album_id', targetKey: 'id',})
     Song.belongsTo(models.Artist, {as: 'artist', foreignKey: 'artist_id', targetKey: 'id',})
   };
   return Song;

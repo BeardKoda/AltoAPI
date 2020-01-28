@@ -40,8 +40,8 @@ var user = require('express').Router()
 
     // get All Songs API
     user.get('/song/', SongController.getByLevel);
-    user.get('/song/all', SongController.getALL);
-    user.get('/get/home-page-collection', SongController.getAPI);
+    user.get('/song/all', SongController.getSongs);
+    user.get('/get/home-page-collection', SongController.getALL);
     user.get('/song/:id', SongController.getById);
     user.post('/song/fav/add/:id', SongController.addToFav)
     user.post('/song/fav/remove/:id', SongController.removeFromFav)
@@ -57,8 +57,10 @@ var user = require('express').Router()
 
     // get Artist API
     user.post('/artist/register', auth, ArtistController.register)
-    user.get('/artist/all', ArtistController.all);
-    user.get('/artist/:id', ArtistController.getById);
+    user.get('/artist/all', auth, ArtistController.all);
+    user.get('/artist/load/:id', auth, ArtistController.getById);
+    user.get('/artist/songs', auth, ArtistController.getSongs)
+    user.get('/artist/dash', auth, ArtistController.getDash)
 
     // 404 response
     user.get('**', function(req, res){
