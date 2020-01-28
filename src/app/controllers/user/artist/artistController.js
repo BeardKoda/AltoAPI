@@ -136,7 +136,7 @@ let controller = {
             where:{artist_id:uid},
             limit: limit,
             offset: offset,
-            attributes:['id', 'title', 'description', 'track_url', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'genre', 'level', 'updated_at']
+            attributes:['id', 'title', 'description', 'track_url', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'genre', 'updated_at']
         })
         var response = {
             songs,
