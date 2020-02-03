@@ -3,9 +3,6 @@ const { S3_BUCKET } = require('../../config/app')
 const fs = require('fs');
 
 exports.upload = (file, filename, callback) => {
-    // console.log("file")
-    // const file=fs.readFileSync(filePath)
-    // Setting up S3 upload parameters
     const params = {
         Bucket: S3_BUCKET,
         Key: filename, // File name you want to save as in S3
@@ -28,3 +25,23 @@ exports.upload = (file, filename, callback) => {
         console.log(pro+'%', loaded, total)
     });
 }
+
+exports.stream = (file, callback)=>{
+    console.log(file)
+    const params = {
+        Bucket: S3_BUCKET,
+        Key: file
+    };
+    // var s3Stream = s3.getObject(params).createReadStream();
+    s3.getObject(params,function(err, data) {
+            // console.log(err, data.Body)
+            if (err) {
+                console.error('error', err); // an error occurred
+            } else {
+                const string = new TextDecoder('utf-8').decode(data.Body);
+                // console.log(string);
+                return callback(null,string)
+            }
+    });
+    // return s3Stream;
+}   

@@ -3,6 +3,7 @@ var jwt = require('jsonwebtoken');
 var models = require('../../../models');
 const Song = models.Song;
 const ExtApi = require('../../helpers/api');
+const S3 = require('../../helpers/s3')
 
 let limit = 50;   // number of records per page
 let offset = 0;
@@ -143,8 +144,13 @@ let controller = {
     },
 
     getSongs:async(req,res)=>{
+        const data = await models.Song.findAndCountAll();
+        let page = req.query.page || 1;      // page number
+        let pages = Math.ceil(data.count / limit);
+        offset = limit * (page - 1) || 0;
+        console.log(offset)
         const songs = await models.Song.findAll({attributes:['id', 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'type', 'year', 'price'],
-            limit: 10,
+            limit: limit,
             where: {
                 status: 1,
                 is_deleted:0,
@@ -157,7 +163,13 @@ let controller = {
                 ]}
             ]
         });
-        return res.status(200).json(songs);
+        let response = {
+            page,
+            pages,
+            offset,
+            songs
+        };
+        return res.status(200).json(response);
     },
 
     getALL:async(req,res)=>{
@@ -192,6 +204,20 @@ let controller = {
             { title: "New Releases", type: "Album", albumList:album}
         ]
         return res.status(200).json(response);
+    },
+
+    playUrl:async(req,res)=>{
+        let path = req.query.path
+        if(path!=null){
+            // S3.stream(path, (err, data)=>{
+            //     console.log(err, data)
+            //     res.send(data, err)
+            // })
+            res.send(path)
+        }else{
+            // console.log('no path')
+            res.send('no path')
+        }
     }
 }
 

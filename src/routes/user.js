@@ -48,6 +48,8 @@ var user = require('express').Router()
 
     user.post('/song/upload', auth, UploadController.upload)
     user.post('/song/update/:id',auth, UploadController.uploadData)
+    // user.post('/play/:path', auth, SongController.playUrl)
+    user.post('/play', auth, SongController.playUrl)
 
     // get Playlist API
     user.get('/playlist/all', PlaylistController.all);
