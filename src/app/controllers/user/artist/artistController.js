@@ -35,7 +35,7 @@ let controller = {
                 offset,
                 artists
             };
-            return res.status(200).json({data:response});
+            return res.status(200).json(response);
         }catch(err){
             res.status(500).json({data:"Internal Server Error"});
         } 
@@ -43,19 +43,23 @@ let controller = {
 
     getById:async(req, res)=>{
         let uid = parseInt(req.params.id)
-        // return res.send(req.params.id);ss
-        models.Artist.findOne({
-            where:{id:uid, status:"active"},
-            attributes:['id', 'name', 'cover_img', 'premium'],
-            include: [
-                {model:models.Song, as:'songs', attributes:['id', 'title']},
-                {model:models.Album, as:'albums', attributes:['id', 'title']}
-            ]
-        }).then(
-            data =>{
-                return res.status(200).json({data:data});
-              }
-        )
+        console.log(uid)
+        if(uid){    
+            models.Artist.findOne({
+                where:{id:uid, status:"active"},
+                attributes:['id', 'name', 'cover_img', 'premium'],
+                include: [
+                    {model:models.Song, as:'songs', attributes:['id', 'title']},
+                    {model:models.Album, as:'albums', attributes:['id', 'title']}
+                ]
+            }).then(
+                data =>{
+                    return res.status(200).json(data);
+                }
+            )
+        }else{
+            return res.status(202).json(null)
+        }
     },
 
     register:async(req, res, next)=>{
