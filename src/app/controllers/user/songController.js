@@ -5,6 +5,7 @@ const Song = models.Song;
 const ExtApi = require('../../helpers/api');
 const S3 = require('../../helpers/s3')
 
+const { S3_URL } = require('../../../config/app')
 let limit = 50;   // number of records per page
 let offset = 0;
 
@@ -207,16 +208,22 @@ let controller = {
     },
 
     playUrl:async(req,res)=>{
-        let path = req.query.path
-        if(path!=null){
-            // S3.stream(path, (err, data)=>{
-            //     console.log(err, data)
-            //     res.send(data, err)
-            // })
-            res.send(path)
+        let uid = req.query.id
+        if(uid!=null){
+            const song = await models.Song.findOne({
+                where:{id:uid},
+                attributes:['track_url'],
+                // include:[{model:models.Album, as:'album', attributes:['id', 'title']},
+                // {model:models.Artist, as:'artist', attributes:['id', 'name']}]
+            }).then(
+                song =>{
+                    res.status(200).json(S3_URL+song.track_url);
+                }
+            )
+            // res.send(path)
         }else{
             // console.log('no path')
-            res.send('no path')
+            res.send('no song passed')
         }
     }
 }
