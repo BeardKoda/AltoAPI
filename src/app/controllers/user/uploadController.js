@@ -25,35 +25,35 @@ let controller = {
                 // let music_path = 'src/public/uploads/'+name
                 
                 metadata = await mm.parseBuffer(avatar.data)
-                // S3.upload(avatar.data, name,async(err,result)=>{
-                //     if(err){
-                //         console.log(err)
-                //         res.status(422).json({
-                //             message:'An Error Occurred',
-                //             data:err
-                //         })
-                //     }
-                //     console.log(result)
-                //     models.Song.create({artist_id: artist.id, track_url:name, title:metadata.common.title, year:metadata.common.year, duration:metadata.format.duration, }).then((data) =>{
-                //         //send response
-                //         res.status(200).json({
-                //             status:"finished",
-                //             message: 'File is uploaded',
-                //             data: {
-                //                 song:data,
-                //                 name: avatar.name,
-                //                 mimetype: avatar.mimetype,
-                //                 size: avatar.size,
-                //                 // cover_img:JSON.stringify(metadata.common.picture)
-                //             }
-                //         })
-                //     }, err=>{
-                //         // console.log(err)
-                //         res.status(422).json({
-                //             message:"an Error occurred"
-                //         })
-                //     })
-                // })
+                S3.upload(avatar.data, name,async(err,result)=>{
+                    if(err){
+                        // console.log(err)
+                        res.status(422).json({
+                            message:'An Error Occurred',
+                            data:err
+                        })
+                    }
+                    // console.log(result)
+                    models.Song.create({artist_id: artist.id, track_url:name, title:metadata.common.title, year:metadata.common.year, duration:metadata.format.duration, }).then((data) =>{
+                        //send response
+                        res.status(200).json({
+                            status:"finished",
+                            message: 'File is uploaded',
+                            data: {
+                                song:data,
+                                name: avatar.name,
+                                mimetype: avatar.mimetype,
+                                size: avatar.size,
+                                // cover_img:JSON.stringify(metadata.common.picture)
+                            }
+                        })
+                    }, err=>{
+                        // console.log(err)
+                        res.status(422).json({
+                            message:"an Error occurred"
+                        })
+                    })
+                })
             } catch (err) {
                 res.status(500).send(err);
             }

@@ -22,6 +22,7 @@ module.exports = {
 
     S3_ID:process.env.S3_ID,
     S3_SECRET:process.env.S3_SECRET,
-    S3_BUCKET:process.env.S3_BUCKET
+    S3_BUCKET:process.env.S3_BUCKET,
+    S3_URL:process.env.S3_URL
 
 };
