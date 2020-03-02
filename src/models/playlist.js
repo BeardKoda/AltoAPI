@@ -7,7 +7,11 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    song_id:{
+    title:{
+        allowNull:false,
+        type:DataTypes.INTEGER
+    },
+    description:{
         allowNull:false,
         type:DataTypes.INTEGER
     },
@@ -15,13 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull:false,
         type:DataTypes.INTEGER
     },
-    playlist_id:{
-        allowNull:false,
-        type:DataTypes.INTEGER
-    },
     status:{
         allowNull:false,
-        type:DataTypes.BOOLEAN
+        type:DataTypes.BOOLEAN,
+        default:true
     },
     is_deleted:{
         allowNull:false,
@@ -31,11 +32,12 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-    tableName:'playlist_items'
+    tableName:'playlists'
   });
   Playlist.associate = function(models) {
-    // // associations can be defined here
-    Playlist.belongsTo(models.Playlist, {as: 'song', foreignKey:'song_id'})
+    // associations can be defined here
+    Playlist.hasMany(models.P_Item, {as: 'songs', foreignKey:'id', targetKey:'playlist_id'})
+    Playlist.belongsTo(models.User, {as:'user', foreignKey:'user_id', targetKey:'id'})
   };
   return Playlist;
 };

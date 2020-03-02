@@ -10,12 +10,12 @@ var multer  = require('multer')
 // user = express()
 var user = require('express').Router()
 
-    user.post('/', (req,res,next)=>{
-        return true
-    })
-    user.get('/', (req,res,next)=>{
-        return true
-    })
+    // user.post('/', (req,res,next)=>{
+    //     return true
+    // })
+    // user.get('/', (req,res,next)=>{
+    //     return true
+    // })
     // const userRoute = ()=>{
     // user.use(session({
     //     name:U_SESS_NAME,
@@ -52,10 +52,12 @@ var user = require('express').Router()
     user.post('/play', auth, SongController.playUrl)
 
     // get Playlist API
-    user.get('/playlist/all', PlaylistController.all);
-    user.get('playlist/:id', PlaylistController.getById);
-    user.post('/playlist/new', PlaylistController.newPlaylist);
-    user.post('/playlist/delete', PlaylistController.deletePlaylist);
+    user.get('/playlist/all',auth, PlaylistController.all);
+    user.get('/playlist/get/:id', auth, PlaylistController.getById);
+    user.post('/playlist/new', auth, PlaylistController.newPlaylist);
+    user.post('/playlist/song/add', auth, PlaylistController.addToPlaylist);
+    user.post('/playlist/song/remove', auth, PlaylistController.removeFromPlaylist);
+    user.post('/playlist/delete', auth, PlaylistController.deletePlaylist);
 
     // get Artist API
     user.post('/artist/register', auth, ArtistController.register)
