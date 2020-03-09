@@ -149,7 +149,7 @@ let controller = {
         let page = req.query.page || 1;      // page number
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
-        console.log(offset)
+        // console.log(offset)
         const songs = await models.Song.findAll({attributes:['id', 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'type', 'year', 'price'],
             limit: limit,
             where: {
@@ -224,6 +224,23 @@ let controller = {
         }else{
             // console.log('no path')
             res.send('no song passed')
+        }
+    },
+
+    addStream:async()=>{
+        let uid = req.query.id
+        let userId = res.user.id
+        if(uid!=null){
+            models.Song.findOne({where:{id:uid}})
+            .then(song =>{
+                models.Play.create({ userId: userId, song_id:uid, ipaddress:'234,2323'})
+                .then(data =>{
+                    return res.status(200).json({data:true});
+                })
+            })
+        }else{
+            // console.log('no path')
+            res.send('no song is played')
         }
     }
 }

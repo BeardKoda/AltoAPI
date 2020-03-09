@@ -140,10 +140,10 @@
                 }
             }
         },
-        "/song": {
+        "/song/{type}": {
             "get": {
-                "summary": "Fetch Hot Songs.",
-                "description": "Fetches All the Songs on the Hot List.",
+                "summary": "Fetch Song by type.",
+                "description": "Fetches All the Songs on the Type list.",
                 "security": [
                     {
                         "APIKeyHeader": [],
@@ -151,20 +151,543 @@
                     }
                 ],
                 "tags": [
-                    "Songs"
+                    "Song"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "type": "string",
+                        "description": "Type of Song to Fetch"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/song/{id}": {
+            "get": {
+                "summary": "Song details.",
+                "description": "Fetches All the Details Relating to the Songs",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Song"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "integer",
+                        "description": "The Id of Song to Fetch",
+                        "required": true,
+                        "format": "int64"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/song/fav/add/{id}": {
+            "post": {
+                "summary": "Add Song to Favourites.",
+                "description": "Add Song to Favourite",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Song"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "integer",
+                        "description": "The Id of Song to Fetch",
+                        "required": true,
+                        "format": "int64"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/song/fav/remove/{id}": {
+            "post": {
+                "summary": "Removes Song from Favourites List by Id.",
+                "description": "Removes a Song from Favourite List by Id",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Song"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "integer",
+                        "description": "The Id of Song to Fetch",
+                        "required": true,
+                        "format": "int64"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/playlist/all": {
+            "get": {
+                "summary": "Get User's Playlist.",
+                "description": "Fetches the User's Playlist ",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Playlist"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/playlist/get/{id}": {
+            "get": {
+                "summary": "Get Selected Playlist.",
+                "description": "Fetches the User's Selected Playlist by Id",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Playlist"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "integer",
+                        "description": "The Id of Song to Fetch",
+                        "required": true,
+                        "format": "int64"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/playlist/new": {
+            "post": {
+                "summary": "Creates new Playlist.",
+                "description": "Creates a New Playlist",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Playlist"
+                ],
+                "parameters": [
+                    {
+                        "in": "formdata",
+                        "name": "title",
+                        "type": "string",
+                        "description": "The Title of Playlist to Create",
+                        "required": true
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/playlist/song/add": {
+            "post": {
+                "summary": "Adds Song to Playlist.",
+                "description": "Adds Song to Playlist",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Playlist"
+                ],
+                "parameters": [
+                    {
+                        "in": "formdata",
+                        "name": "song_id",
+                        "type": "integer",
+                        "description": "The song Id to add to playlist",
+                        "required": true
+                    },
+                    {
+                        "in": "formdata",
+                        "name": "playlist_id",
+                        "type": "integer",
+                        "description": "The playlist Id to add song to",
+                        "required": true
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/playlist/song/remove": {
+            "post": {
+                "summary": "Removes Song from Playlist.",
+                "description": "Removes Song from Playlist",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Playlist"
+                ],
+                "parameters": [
+                    {
+                        "in": "formdata",
+                        "name": "song_id",
+                        "type": "integer",
+                        "description": "The song Id to add to playlist",
+                        "required": true
+                    },
+                    {
+                        "in": "formdata",
+                        "name": "playlist_id",
+                        "type": "integer",
+                        "description": "The playlist Id to add song to",
+                        "required": true
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/playlist/delete": {
+            "delete": {
+                "summary": "Deletes Playlist.",
+                "description": "Removes All Songs from Playlist an Deletes Playlist",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Playlist"
+                ],
+                "parameters": [
+                    {
+                        "in": "formdata",
+                        "name": "playlist_id",
+                        "type": "integer",
+                        "description": "The playlist Id to add song to",
+                        "required": true
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/artist/{type}": {
+            "get": {
+                "summary": "Get Artist by type.",
+                "description": "Fetches the Artists by Type, example, Hot, Trending, Latest",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Artist"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "type": "string",
+                        "description": "The type/ctegory of artist to Fetch",
+                        "required": true,
+                        "format": "int64"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/artist/load/{id}": {
+            "get": {
+                "summary": "Get Artist by ID.",
+                "description": "Fetches the Artists Details by ID",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Artist"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "integer",
+                        "description": "The Id of Song to Fetch",
+                        "required": true,
+                        "format": "int64"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/album/{type}": {
+            "get": {
+                "summary": "Get Album by type.",
+                "description": "Fetches the Album by Trending, Featured, Newest, top",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Album"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "type": "string",
+                        "description": "The type/ctegory of artist to Fetch",
+                        "required": true,
+                        "format": "int64"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/album/load/{id}": {
+            "get": {
+                "summary": "Get Album detail by ID.",
+                "description": "Fetches the Album Details by ID",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Album"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "integer",
+                        "description": "The Id of Album to Fetch",
+                        "required": true,
+                        "format": "int64"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/genre": {
+            "get": {
+                "summary": "Get All Genres.",
+                "description": "Fetches the Genres",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Genre"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/search": {
+            "get": {
+                "summary": "Search Endpoint to search for songs, artist and albums.",
+                "description": "Fetches the Search result data",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Search"
                 ],
                 "parameters": [
                     {
                         "in": "query",
-                        "name": "type",
+                        "name": "q",
                         "type": "string",
-                        "description": "Type of Song to Fetch"
-                    },
-                    {
-                        "in": "query",
-                        "name": "page",
-                        "type": "integer",
-                        "description": "The page number you are fetch"
+                        "description": "The search string to query for",
+                        "required": true
                     }
                 ],
                 "produces": [
