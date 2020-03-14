@@ -12,6 +12,9 @@ var user = require('express').Router()
 
     user.post('/login', Request.validate('login'), AuthController.login)
     user.post('/register', Request.validate('register'), AuthController.register)
+    user.post('/sendmail', AuthController.sendmail)
+    user.post('/account/resend', AuthController.resendVerification)
+    user.post('/account/verify/:token', AuthController.verifyAccount)
     
     // User Auth
     user.post('/profile', auth, AuthController.getData)
@@ -32,6 +35,7 @@ var user = require('express').Router()
 
     // get Playlist API
     user.get('/playlist/all',auth, PlaylistController.all);
+    user.get('/playlist/featured',auth, PlaylistController.getFeatured);
     user.get('/playlist/get/:id', auth, PlaylistController.getById);
     user.post('/playlist/new', auth, PlaylistController.newPlaylist);
     user.post('/playlist/song/add', auth, PlaylistController.addToPlaylist);

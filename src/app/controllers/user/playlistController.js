@@ -125,7 +125,10 @@ let controller = {
                 return res.status(200).json({data:"Successfully Deleted playlist"});
             })
         });
-    }
+    },
 
+    getFeatured:async(req,res)=>{
+        res.status(200).send('featured')
+    }
 }
 module.exports = controller;
