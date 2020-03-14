@@ -150,13 +150,15 @@ let controller = {
     },
 
     getSongs:async(req, res)=>{
+        // console.log("here")
         var art = await Art.artist(res.user)
         let uid = art.id
-        const data = await models.Song.findAndCountAll({where:{artist_id:uid}});
+        const data = await models.Song.findAndCountAll({where:{artist_id:uid}, attributes:['id']});
+        console.log(data)
         let page = req.query.page || 1;      // page number
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
-        console.log(offset, limit, page)
+        // console.log("Herererer",offset, limit, page)
         // var songs = await models.Artist.findOne({
         //     where:{id:uid, status:"active"},
         //     attributes:['id', 'name', 'cover_img', 'premium'],

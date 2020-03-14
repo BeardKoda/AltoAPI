@@ -101,9 +101,9 @@ module.exports = (sequelize, DataTypes) => {
   });
   Song.associate = function(models) {
     // associations can be defined here
-    Song.belongsTo(models.Album, {as: 'album', foreignKey: 'album_id', targetKey: 'id',})
-    Song.belongsTo(models.Artist, {as: 'artist', foreignKey: 'artist_id', targetKey: 'id',})
-    Song.belongsTo(models.P_Item, {as: 'song', foreignKey: 'id', targetKey: 'song_id',})
+    // Song.belongsTo(models.Album, {as: 'album', foreignKey: 'album_id', targetKey: 'id',})
+    // Song.belongsTo(models.Artist, {as: 'artist', foreignKey: 'artist_id', targetKey: 'id',})
+    // Song.belongsTo(models.P_Item, {as: 'song', foreignKey: 'song_id', targetKey: 'id',})
   };
   return Song;
 };

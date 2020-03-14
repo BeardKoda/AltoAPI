@@ -25,8 +25,8 @@ module.exports = (data) => {
             subject: 'Account Verification - AltoStream',
             template:'./verify',
             context: {
-                name: 'Joshua',
-                email:'akinsuyi.joshua84@gmail.com',
+                name: data.name||data.username,
+                email:data.email,
                 url:url
             }
         };
