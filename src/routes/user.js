@@ -31,7 +31,7 @@ var user = require('express').Router()
     user.post('/song/fav/remove/:id', SongController.removeFromFav)
 
     // user.post('/play/:path', auth, SongController.playUrl)
-    // user.post('/play', auth, SongController.playUrl)
+    user.post('/play', auth, SongController.playUrl)
 
     // get Playlist API
     user.get('/playlist/all',auth, PlaylistController.all);
