@@ -46,6 +46,9 @@ var user = require('express').Router()
     user.post('/song/:id/stream', auth, SongController.addStream);
 
     // Artist details
+    user.post('/artist/register', auth, ArtistController.register) //artist registration
+    user.get('/artist/dash', auth, ArtistController.getDash) //atist dashboard detail
+    user.get('/artist/songs', auth, ArtistController.getSongs) //artist songs
     user.get('/artist/:type', auth, ArtistController.all);
     user.get('/artist/load/:id', auth, ArtistController.getById);
 
@@ -59,9 +62,6 @@ var user = require('express').Router()
     user.get('/search', SearchController.search)
 
     // get Artist API - for uploading and artist services analytics
-    user.post('/artist/register', auth, ArtistController.register) //artist registration
-    user.get('/artist/dash', auth, ArtistController.getDash) //etist dashboard detail
-    user.get('/artist/songs', auth, ArtistController.getSongs) //artist songs
     user.post('/song/upload', auth, UploadController.upload)    //artist song upload
     user.post('/song/update/:id',auth, UploadController.uploadData) //artist song update
 
