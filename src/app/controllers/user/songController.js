@@ -2,7 +2,7 @@ const { body, validationResult } = require('express-validator/check')
 var jwt = require('jsonwebtoken');
 var models = require('../../../models');
 const Song = models.Song;
-const ExtApi = require('../../helpers/api');
+const {ExtApi, isExisting}  = require('../../helpers/api');
 const S3 = require('../../helpers/s3')
 
 const { S3_URL } = require('../../../config/app')
@@ -29,12 +29,17 @@ let controller = {
     getByLevel:async(req, res)=>{
         // return res.send(req.params);
         let type = req.params.level
+        console.log(type)
         // let type = parseInt(req.query.type)
         if(!type){
             res.status(401).json({data: "No song type specified"});
         }
+        let exist = isExisting(type)
+        if(!exist){
+            res.status(401).json({data: "Invalid type specified"});
+        } 
         try{
-            const data = await models.Song.findAndCountAll();
+            const data = await models.Song.findAndCountAll({attributes:['id']});
             let page = req.query.page;      // page number
             let pages = Math.ceil(data.count / limit);
             offset = limit * (page - 1) || 0;
@@ -145,7 +150,7 @@ let controller = {
     },
 
     getSongs:async(req,res)=>{
-        const data = await models.Song.findAndCountAll();
+        const data = await models.Song.findAndCountAll({attributes:['id']});
         let page = req.query.page || 1;      // page number
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;

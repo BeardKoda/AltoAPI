@@ -8,3 +8,9 @@ exports.upload = (url, callback) => {
         console.log("Error Message: " + err.message);
     });
 };
+exports.isExisting = (type)=>{
+    let arr = [
+        'hot', 'trending', 'latest', 'new'
+    ]
+    return arr.includes(type)
+}
