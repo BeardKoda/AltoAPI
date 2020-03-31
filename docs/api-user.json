@@ -668,6 +668,41 @@
                 }
             }
         },
+        "/play": {
+            "post": {
+                "summary": "Get Song URL.",
+                "description": "Fetches the Song URL to be played",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "type": "string",
+                        "description": "The id of the song to get URL",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Genre"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
         "/search": {
             "get": {
                 "summary": "Search Endpoint to search for songs, artist and albums.",
