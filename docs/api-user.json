@@ -688,7 +688,7 @@
                     }
                 ],
                 "tags": [
-                    "Genre"
+                    "Player"
                 ],
                 "produces": [
                     "application/json"
