@@ -2,7 +2,7 @@ const { body, validationResult } = require('express-validator/check')
 var jwt = require('jsonwebtoken');
 var models = require('../../../models');
 const Song = models.Song;
-const ExtApi = require('../../helpers/api');
+const {ExtApi, isExisting}  = require('../../helpers/api');
 const S3 = require('../../helpers/s3')
 
 const { S3_URL } = require('../../../config/app')
@@ -29,12 +29,17 @@ let controller = {
     getByLevel:async(req, res)=>{
         // return res.send(req.params);
         let type = req.params.level
+        console.log(type)
         // let type = parseInt(req.query.type)
         if(!type){
             res.status(401).json({data: "No song type specified"});
         }
+        let exist = isExisting(type)
+        if(!exist){
+            res.status(401).json({data: "Invalid type specified"});
+        } 
         try{
-            const data = await models.Song.findAndCountAll();
+            const data = await models.Song.findAndCountAll({attributes:['id']});
             let page = req.query.page;      // page number
             let pages = Math.ceil(data.count / limit);
             offset = limit * (page - 1) || 0;
@@ -145,11 +150,11 @@ let controller = {
     },
 
     getSongs:async(req,res)=>{
-        const data = await models.Song.findAndCountAll();
+        const data = await models.Song.findAndCountAll({attributes:['id']});
         let page = req.query.page || 1;      // page number
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
-        console.log(offset)
+        // console.log(offset)
         const songs = await models.Song.findAll({attributes:['id', 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'type', 'year', 'price'],
             limit: limit,
             where: {
@@ -224,6 +229,23 @@ let controller = {
         }else{
             // console.log('no path')
             res.send('no song passed')
+        }
+    },
+
+    addStream:async()=>{
+        let uid = req.query.id
+        let userId = res.user.id
+        if(uid!=null){
+            models.Song.findOne({where:{id:uid}})
+            .then(song =>{
+                models.Play.create({ userId: userId, song_id:uid, ipaddress:'234,2323'})
+                .then(data =>{
+                    return res.status(200).json({data:true});
+                })
+            })
+        }else{
+            // console.log('no path')
+            res.send('no song is played')
         }
     }
 }

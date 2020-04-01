@@ -1,10 +1,13 @@
 const { body, validationResult } = require('express-validator/check')
+const moment = require('moment')
 var jwt = require('jsonwebtoken');
 var config = require('../../../config/jwt')
 var bcrypt = require('bcryptjs');
 var auth = require('../../middlewares/user/authMiddleware')
 const uuidv1 = require('uuid/v1');
 var models = require('../../../models');
+var eventer=require('../../events/emitter')
+
 
 /* GET actorController. */
 let controller = {
@@ -60,16 +63,19 @@ let controller = {
           return;
         }
       var data = req.body;
+      var today = new Date();
+      var token = Math.random().toString(36).substr(2, 5)
       var hashedPassword = bcrypt.hashSync(req.body.password, 8);
       models.User.findOne({where:{email:data.email}}).then(user => {
         if(!user){
           models.User.create({
-            name : data.name, email : data.email, password : hashedPassword, status:"active", premium:0,
+            name : data.name, email : data.email, password : hashedPassword, status:"active", email_token:token, premium:0,
             uuid:uuidv1()
           }).then((user) => {
               var token =  controller.getToken(user)
               req.session.user = user
-              res.status(200).json({ response: token });
+              eventer.emit('sendMail:Register', user)
+              res.status(200).json({ response: token, messge:"Account created Successfully Verify Your Account" });
             },
             (err) => {
                 console.log(err)
@@ -132,9 +138,70 @@ let controller = {
       }
       return res.status(202).json({user:null, message:"logged out successfully"})
     },
+
     ping:(req, res, next)=>{
-      console.log('ping')
+      // console.log('ping')
       return res.status(200).json({user:null, message:"still active"})
-  }
+    },
+
+    resendVerification:(req,res)=>{
+      let { email } = req.body;
+      if(!email){
+        res.status(422).json({message:'No email specified'})
+      }
+      models.User.findOne({where:{email:email}}).then(
+        user => {
+            res.status(200).json({
+              message:"Account Verification Mail Sent"
+            })
+        },
+        err => {
+          res.status(500).json({
+            error: err
+          })
+        }
+      )
+    },
+
+    verifyAccount:(req,res)=>{
+      let token = req.params.token
+      // console.log(token)
+
+      models.User.findOne({where:{email_token:token}}).then(
+        user => {
+          if(user!= null){
+            var c_date = moment(user.createdAt).format('YYYY-MM-DD hh:mm:ss');
+            var now = moment().format('YYYY-MM-DD hh:mm:ss')
+            var status = moment(c_date).add(1, 'hours').format('YYYY-MM-DD hh:mm:ss');
+            var isvalid = moment(now).isSameOrBefore(status)
+            // console.log(c_date, status, moment().format('Y-MM-DD '), isvalid)
+            if(isvalid){
+              res.status(200).json({
+                message:"Account Activated Successfully"
+              })
+            }else{
+              res.status(422).json({
+                error:"Activation code Expired"
+              })
+            }
+          }else{
+            res.status(422).json({
+              error:"Invalid Activation code"
+            })
+          }
+        },
+        err => {
+          res.status(500).json({
+            error:err
+          })
+        }
+      )
+      // res.status(200).json(token);
+    },
+
+    sendmail:(req, res, next)=>{
+      eventer.emit('sendMail:Register', {name:'Joshua', email:'akinsuyi.joshua84@gmail.com', email_token:'asfasgassgasgsagsag'})
+      console.log('jhere')
+    }
 }
 module.exports = controller

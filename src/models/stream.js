@@ -1,27 +1,24 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const P_Item = sequelize.define('P_Item', {
+  const Play = sequelize.define('Stream', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    song_id:{
-        allowNull:false,
-        type:DataTypes.INTEGER
-    },
     user_id:{
         allowNull:false,
         type:DataTypes.INTEGER
     },
-    playlist_id:{
+    song_id:{
         allowNull:false,
         type:DataTypes.INTEGER
     },
-    status:{
+    ipaddress:{
         allowNull:false,
-        type:DataTypes.BOOLEAN
+        type:DataTypes.BOOLEAN,
+        default:true
     },
     is_deleted:{
         allowNull:false,
@@ -31,12 +28,12 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
-    tableName:'playlist_items'
+    tableName:'streams'
   });
-  P_Item.associate = function(models) {
-    // // associations can be defined here
-    P_Item.belongsTo(models.Playlist, {as: 'playlist', foreignKey:'playlist_id', targetKey:'id'})
-    P_Item.hasMany(models.Song, {as: 'detail', foreignKey:'song_id', targetKey:'id'})
+  Play.associate = function(models) {
+    // associations can be defined here
+    Play.belongsTo(models.User, {as:'user', foreignKey:'user_id', targetKey:'id'})
+    Play.belongsTo(models.Song, {as:'Song', foreignKey:'song_id', targetKey:'id'})
   };
-  return P_Item;
+  return Play;
 };
