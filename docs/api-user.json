@@ -143,7 +143,7 @@
         "/song/{type}": {
             "get": {
                 "summary": "Fetch Song by type.",
-                "description": "Fetches All the Songs on the Type list.",
+                "description": "Fetches All the Songs on the Type list,Trending, Featured, Newest, top",
                 "security": [
                     {
                         "APIKeyHeader": [],
