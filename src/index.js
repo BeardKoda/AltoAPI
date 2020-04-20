@@ -60,7 +60,7 @@ app.use(morgan(loggerFormat, {
 }));
 
 // const artistRoute = require('./routes/artist.js')
-
+app.set('trust proxy', true);
 // enable files upload
 app.use(fileUpload({
   createParentPath: true,

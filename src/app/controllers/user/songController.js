@@ -235,10 +235,11 @@ let controller = {
     addStream:async()=>{
         let uid = req.query.id
         let userId = res.user.id
+        let ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
         if(uid!=null){
             models.Song.findOne({where:{id:uid}})
             .then(song =>{
-                models.Play.create({ userId: userId, song_id:uid, ipaddress:'234,2323'})
+                models.Play.create({ userId: userId, song_id:uid, ipaddress:ip})
                 .then(data =>{
                     return res.status(200).json({data:true});
                 })
@@ -247,6 +248,7 @@ let controller = {
             // console.log('no path')
             res.send('no song is played')
         }
+        // res.status(200).json({ip})
     }
 }
 
