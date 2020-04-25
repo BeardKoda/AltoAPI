@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
   P_Item.associate = function(models) {
     // // associations can be defined here
     P_Item.belongsTo(models.Playlist, {as: 'playlist', foreignKey:'playlist_id', targetKey:'id'})
-    P_Item.hasMany(models.Song, {as: 'detail', foreignKey:'song_id', targetKey:'id'})
+    P_Item.belongsTo(models.Song, {as: 'detail', foreignKey:'song_id', targetKey:'id'})
   };
   return P_Item;
 };

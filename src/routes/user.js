@@ -26,7 +26,7 @@ var user = require('express').Router()
     user.get('/song/:level', SongController.getByLevel);
     user.get('/song/all', SongController.getSongs);
     user.get('/get/home-page-collection', SongController.getALL);
-    user.get('/song/:id', SongController.getById);
+    user.get('/song/detail/:id', SongController.getById);
     user.post('/song/fav/add/:id', SongController.addToFav)
     user.post('/song/fav/remove/:id', SongController.removeFromFav)
 
