@@ -174,7 +174,7 @@
                 }
             }
         },
-        "/song/{id}": {
+        "/song/detail/{id}": {
             "get": {
                 "summary": "Song details.",
                 "description": "Fetches All the Details Relating to the Songs",

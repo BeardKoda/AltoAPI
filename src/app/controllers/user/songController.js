@@ -76,7 +76,9 @@ let controller = {
                 where:{playlist_id:playlist.id, status:true},
                 attributes:['id'],
                 include:[
-                    { model:models.Song, as:'detail', attributes:['id','title', 'track_url', 'cover_img', 'featuring', 'duration']}
+                    { model:models.Song, as:'detail', attributes:['id','title', 'track_url', 'cover_img', 'featuring', 'duration'], include:[
+                        {model:models.Artist, as:'artist', attributes:['id', 'name']}
+                    ]}
                 ]
             })
             .then(data =>{
