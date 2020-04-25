@@ -26,47 +26,69 @@ let controller = {
         // return res.send('Welcome');
     },
 
+    // getByLevel:async(req, res)=>{
+    //     // return res.send(req.params);
+    //     let type = req.params.level
+    //     // console.log(type)
+    //     // let type = parseInt(req.query.type)
+    //     if(!type){
+    //         res.status(401).json({data: "No song type specified"});
+    //     }
+    //     let exist = isExisting(type)
+    //     if(!exist){
+    //         res.status(401).json({data: "Invalid type specified"});
+    //     } 
+    //     try{
+    //         const data = await models.Song.findAndCountAll({attributes:['id']});
+    //         let page = req.query.page;      // page number
+    //         let pages = Math.ceil(data.count / limit);
+    //         offset = limit * (page - 1) || 0;
+    //         const songs = await models.Song.findAll({
+    //             attributes: ['id', 'title'],
+    //             limit: limit,
+    //             offset: offset,
+    //             where: {
+    //                 status: 1,
+    //                 is_deleted:0,
+    //             },
+    //             $sort: { id: 1 }
+    //         });
+    //         let response = {
+    //             page,
+    //             pages,
+    //             offset,
+    //             songs
+    //         };
+    //         return res.status(200).json({data:response});
+    //     }catch(err){
+    //         res.send(err)
+    //         res.status(500).json({data:"Internal Server Error"});
+    //     } 
+    // }, 
+
     getByLevel:async(req, res)=>{
-        // return res.send(req.params);
-        let type = req.params.level
-        console.log(type)
-        // let type = parseInt(req.query.type)
-        if(!type){
-            res.status(401).json({data: "No song type specified"});
-        }
-        let exist = isExisting(type)
-        if(!exist){
-            res.status(401).json({data: "Invalid type specified"});
-        } 
+        let label = req.params.level
+        // let uid = parseInt(req.params.id)
         try{
-            const data = await models.Song.findAndCountAll({attributes:['id']});
-            let page = req.query.page;      // page number
-            let pages = Math.ceil(data.count / limit);
-            offset = limit * (page - 1) || 0;
-            // console.log(data);
-            const songs = await models.Song.findAll({
-                attributes: ['id', 'title'],
-                limit: limit,
-                offset: offset,
-                where: {
-                    status: 1,
-                    is_deleted:0,
-                    // level:type
-                },
-                $sort: { id: 1 }
-            });
-            let response = {
-                page,
-                pages,
-                offset,
-                songs
-            };
-            return res.status(200).json({data:response});
+            const playlist = await models.Playlist.findOne({attributes:['id'], where: { title:label, status: true }});
+            // console.log(playlist.id)
+            models.P_Item.findAll({
+                where:{playlist_id:playlist.id, status:true},
+                attributes:['id'],
+                include:[
+                    { model:models.Song, as:'detail', attributes:['id','title', 'track_url', 'cover_img', 'featuring', 'duration'], include:[
+                        {model:models.Artist, as:'artist', attributes:['id', 'name']}
+                    ]}
+                ]
+            })
+            .then(data =>{
+                return res.status(200).json(data);
+            })
         }catch(err){
-            res.send(err)
+            // console.log(err)
             res.status(500).json({data:"Internal Server Error"});
         } 
-    }, 
+    },
 
     // trending:async(req, res)=>{
     //     try{
@@ -235,10 +257,11 @@ let controller = {
     addStream:async()=>{
         let uid = req.query.id
         let userId = res.user.id
+        let ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
         if(uid!=null){
             models.Song.findOne({where:{id:uid}})
             .then(song =>{
-                models.Play.create({ userId: userId, song_id:uid, ipaddress:'234,2323'})
+                models.Play.create({ userId: userId, song_id:uid, ipaddress:ip})
                 .then(data =>{
                     return res.status(200).json({data:true});
                 })
@@ -247,6 +270,7 @@ let controller = {
             // console.log('no path')
             res.send('no song is played')
         }
+        // res.status(200).json({ip})
     }
 }
 

@@ -60,7 +60,7 @@ app.use(morgan(loggerFormat, {
 }));
 
 // const artistRoute = require('./routes/artist.js')
-
+app.set('trust proxy', true);
 // enable files upload
 app.use(fileUpload({
   createParentPath: true,
@@ -72,7 +72,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // adding Helmet to enhance your API's security
 app.use(helmet());
-var allowedOrigins = ['http://localhost:4200',
+var allowedOrigins = [
+                      'http://localhost:4200',
                       'https://altostream.app', 
                       'https://staging.altostream.app'
                     ];

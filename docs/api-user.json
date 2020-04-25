@@ -143,7 +143,7 @@
         "/song/{type}": {
             "get": {
                 "summary": "Fetch Song by type.",
-                "description": "Fetches All the Songs on the Type list.",
+                "description": "Fetches All the Songs on the Type list,Trending, Featured, Newest, top",
                 "security": [
                     {
                         "APIKeyHeader": [],
@@ -174,7 +174,7 @@
                 }
             }
         },
-        "/song/{id}": {
+        "/song/detail/{id}": {
             "get": {
                 "summary": "Song details.",
                 "description": "Fetches All the Details Relating to the Songs",
@@ -186,6 +186,42 @@
                 ],
                 "tags": [
                     "Song"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "integer",
+                        "description": "The Id of Song to Fetch",
+                        "required": true,
+                        "format": "int64"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                }
+            }
+        },
+        "/song/{id}/stream": {
+            "post": {
+                "summary": "Get Song Stream Analytics.",
+                "description": "Sends the Stream Data to API",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "tags": [
+                    "Analtytics"
                 ],
                 "parameters": [
                     {
