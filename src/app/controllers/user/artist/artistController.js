@@ -132,9 +132,9 @@ let controller = {
 
     getDash:async(req,res,next)=>{
         var data = await Art.artist(res.user)
-        console.log(data.id)
+        console.log(data)
         artist = await models.Artist.findOne({
-            where:{id:uid, status:1}, attributes:['id']})
+            where:{id:data.id, status:1}, attributes:['id']})
         let uid = artist.id
         recent = await models.Song.findAll({attributes:['id', 'title', 'description', 'track_url', 'cover_img', 'status', 'created_at'],
             limit: 5,where:{artist_id:uid}})
