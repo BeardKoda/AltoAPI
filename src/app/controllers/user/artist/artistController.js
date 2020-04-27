@@ -134,7 +134,8 @@ let controller = {
         var data = await Art.artist(res.user)
         console.log(data)
         artist = await models.Artist.findOne({
-            where:{id:data.id}, attributes:['id']})
+            where:{user_id:data.id}, attributes:['id']})
+            console.log(artist)
         let uid = artist.id
         recent = await models.Song.findAll({attributes:['id', 'title', 'description', 'track_url', 'cover_img', 'status', 'created_at'],
             limit: 5,where:{artist_id:uid}})
