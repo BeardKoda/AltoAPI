@@ -103,7 +103,7 @@ let controller = {
             models.Artist.findOne({where:{email:data.email}}).then(user => {
                 // console.log(data.email, "here")
                 if(!user){
-                models.Artist.create({name : data.name, email : data.email,user_id:saved.id, password : data.password, status:"active", premium:0,is_deleted:false, uuid:uuidv1()}).then((user) => {
+                models.Artist.create({name : data.name, email : data.email,user_id:saved.id, password : data.password, status:1, premium:0,is_deleted:false, uuid:uuidv1()}).then((user) => {
                     if(user){
                         models.User.update({is_artist:true},{where:{id:saved.id}}).then(data=>{
                             return res.status(200).json({ response: "Registered as artist"});
