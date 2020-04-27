@@ -134,9 +134,9 @@ let controller = {
         var data = await Art.artist(res.user)
         console.log(data)
         artist = await models.Artist.findOne({
-            where:{user_id:data.id}, attributes:['id']})
+            where:{id:data.id}, attributes:['id']})
             console.log(artist)
-        let uid = artist.id
+        let uid = data.id
         recent = await models.Song.findAll({attributes:['id', 'title', 'description', 'track_url', 'cover_img', 'status', 'created_at'],
             limit: 5,where:{artist_id:uid}})
         c_songs = await models.Song.count({where:{artist_id:uid}})
@@ -187,16 +187,17 @@ let controller = {
 
     publish:async(req, res)=>{
         let uid = parseInt(req.params.id)
-        let me = parseInt(res.user.id)
+        let me = Art.artist(res.user)
         // console.log(res.user.id, uid)
-        models.Song.update({status:true},{where:{id:uid, artist_id:me}}).then(data=>{
+        models.Song.update({status:true},{where:{id:uid, artist_id:me.id}}).then(data=>{
             return res.status(200).json({data:"Successfully Published Song"})
         })
     },
 
     unPublish:async(req, res)=>{
         let uid = parseInt(req.params.id)
-        let me = parseInt(res.user.id)
+        // let me = parseInt(res.user.id)
+        let me = Art.artist(res.user)
         models.Song.update({status:false},{where:{id:uid, artist_id:me}}).then(data=>{
             return res.status(200).json({data:"Successfully Unpublished Song"})
         })
