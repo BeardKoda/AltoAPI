@@ -133,14 +133,14 @@ let controller = {
     getDash:async(req,res,next)=>{
         var data = await Art.artist(res.user)
         console.log(data.id)
-        let uid = data.id
         artist = await models.Artist.findOne({
-            where:{id:uid, status:"active"}, attributes:['id']})
+            where:{id:uid, status:1}, attributes:['id']})
+        let uid = artist.id
         recent = await models.Song.findAll({attributes:['id', 'title', 'description', 'track_url', 'cover_img', 'status', 'created_at'],
-            limit: 5,where:{artist_id:data.id}})
-        c_songs = await models.Song.count({where:{artist_id:data.id}})
+            limit: 5,where:{artist_id:uid}})
+        c_songs = await models.Song.count({where:{artist_id:uid}})
         c_stream = 0
-        c_albums = await models.Album.count({where:{artist_id:data.id}})
+        c_albums = await models.Album.count({where:{artist_id:uid}})
         // console.log(c_songs)
         response = {
             songs:c_songs, albums:c_albums, streams:c_stream,
