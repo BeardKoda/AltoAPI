@@ -81,8 +81,8 @@ let controller = {
                 where:{id:uid, status:"active"},
                 attributes:['id', 'name', 'cover_img', 'premium'],
                 include: [
-                    {model:models.Song, as:'songs', attributes:['id', 'title']},
-                    {model:models.Album, as:'albums', attributes:['id', 'title']}
+                    {model:models.Song, as:'songs', attributes:['id','title', 'cover_img', 'featuring', 'duration'], where:{status:1}},
+                    {model:models.Album, as:'albums', attributes:['id','title', 'cover_img'], where:{status:1}}
                 ]
             }).then(
                 data =>{
@@ -103,7 +103,7 @@ let controller = {
             models.Artist.findOne({where:{email:data.email}}).then(user => {
                 // console.log(data.email, "here")
                 if(!user){
-                models.Artist.create({name : data.name, email : data.email,user_id:saved.id, password : data.password, status:"active", premium:0,is_deleted:false, uuid:uuidv1()}).then((user) => {
+                models.Artist.create({name : data.name, email : data.email,user_id:saved.id, password : data.password, status:1, premium:0,is_deleted:false, uuid:uuidv1()}).then((user) => {
                     if(user){
                         models.User.update({is_artist:true},{where:{id:saved.id}}).then(data=>{
                             return res.status(200).json({ response: "Registered as artist"});
@@ -133,14 +133,14 @@ let controller = {
     getDash:async(req,res,next)=>{
         var data = await Art.artist(res.user)
         console.log(data.id)
-        let uid = data.id
         artist = await models.Artist.findOne({
-            where:{id:uid, status:"active"}, attributes:['id']})
+            where:{id:uid, status:1}, attributes:['id']})
+        let uid = artist.id
         recent = await models.Song.findAll({attributes:['id', 'title', 'description', 'track_url', 'cover_img', 'status', 'created_at'],
-            limit: 5,where:{artist_id:data.id}})
-        c_songs = await models.Song.count({where:{artist_id:data.id}})
+            limit: 5,where:{artist_id:uid}})
+        c_songs = await models.Song.count({where:{artist_id:uid}})
         c_stream = 0
-        c_albums = await models.Album.count({where:{artist_id:data.id}})
+        c_albums = await models.Album.count({where:{artist_id:uid}})
         // console.log(c_songs)
         response = {
             songs:c_songs, albums:c_albums, streams:c_stream,
@@ -182,6 +182,23 @@ let controller = {
             offset,
         }
         return res.status(200).json(response);
+    },
+
+    publish:async(req, res)=>{
+        let uid = parseInt(req.params.id)
+        let me = parseInt(res.user.id)
+        // console.log(res.user.id, uid)
+        models.Song.update({status:true},{where:{id:uid, artist_id:me}}).then(data=>{
+            return res.status(200).json({data:"Successfully Published Song"})
+        })
+    },
+
+    unPublish:async(req, res)=>{
+        let uid = parseInt(req.params.id)
+        let me = parseInt(res.user.id)
+        models.Song.update({status:false},{where:{id:uid, artist_id:me}}).then(data=>{
+            return res.status(200).json({data:"Successfully Unpublished Song"})
+        })
     },
 }
 module.exports = controller;
