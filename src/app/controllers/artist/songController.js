@@ -20,8 +20,8 @@ let controller = {
                 res.status(200).json({data:song});
             }
         )
-        // return res.send('Welcome');
     },
+
     getByLevel:async(req, res)=>{
         // return res.send(req.query);
         let type = parseInt(req.query.type)
@@ -55,65 +55,9 @@ let controller = {
             res.status(500).json({data:"Internal Server Error"});
         } 
     }, 
-    // trending:async(req, res)=>{
-    //     try{
-    //         const data = await Song.findAndCountAll();
-    //         let page = req.query.page;      // page number
-    //         let pages = Math.ceil(data.count / limit);
-    //         offset = limit * (page - 1) || 0;
-    //         const songs = await models.Song.findAll({
-    //             attributes: ['id', 'title'],
-    //             limit: limit,
-    //             offset: offset,
-    //             where: {
-    //                 status: 1,
-    //                 is_deleted:0,
-    //                 level:"trending"
-    //             },
-    //             $sort: { id: 1 }
-    //         });
-    //         let response = {
-    //             page,
-    //             pages,
-    //             offset,
-    //             songs
-    //         };
-    //         return res.status(200).json({data:response});
-    //     }catch(err){
-    //         res.status(500).json({data:"Internal Server Error"});
-    //     }
-    // }, 
-    // featured:async(req, res)=>{
-    //     try{
-    //         const data = await Song.findAndCountAll();
-    //         let page = req.query.page;      // page number
-    //         let pages = Math.ceil(data.count / limit);
-    //         offset = limit * (page - 1) || 0;
-    //         const songs = await models.Song.findAll({
-    //             attributes: ['id', 'title'],
-    //             limit: limit,
-    //             offset: offset,
-    //             where: {
-    //                 status: 1,
-    //                 is_deleted:0,
-    //                 level:"featured"
-    //             },
-    //             $sort: { id: 1 }
-    //         });
-    //         let response = {
-    //             page,
-    //             pages,
-    //             offset,
-    //             songs
-    //         };
-    //         return res.status(200).json({data:response});
-    //     }catch(err){
-    //         res.status(500).json({data:"Internal Server Error"});
-    //     }
-    // },
+    
     addToFav:async(req, res)=>{
         let uid = parseInt(req.params.id)
-        // return res.send(req.params.id);ss
         models.Favourite.create({ song_id: 2, user_id: 3, status:true }).then(
             data =>{
                 return res.status(200).json({data:"Added to favourite"});
@@ -125,7 +69,23 @@ let controller = {
         models.Favourite.update({status:false},{where:{id:uid}}).then(data=>{
             return res.status(200).json({data:"Removed from favourite"})
         })
-    } 
+    },
+
+    publish:async(req, res)=>{
+        let uid = parseInt(req.params.id)
+        let me = parseInt(res.user)
+        models.Song.update({status:1},{where:{id:uid, artist_id:me}}).then(data=>{
+            return res.status(200).json({data:"Successfully Published Song"})
+        })
+    },
+
+    unPublish:async(req, res)=>{
+        let uid = parseInt(req.params.id)
+        let me = parseInt(res.user)
+        models.Song.update({status:0},{where:{id:uid, artist_id:me}}).then(data=>{
+            return res.status(200).json({data:"Successfully Unpublished Song"})
+        })
+    },
 }
 
 module.exports = controller;

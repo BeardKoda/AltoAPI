@@ -25,47 +25,7 @@ let controller = {
         )
         // return res.send('Welcome');
     },
-
-    // getByLevel:async(req, res)=>{
-    //     // return res.send(req.params);
-    //     let type = req.params.level
-    //     // console.log(type)
-    //     // let type = parseInt(req.query.type)
-    //     if(!type){
-    //         res.status(401).json({data: "No song type specified"});
-    //     }
-    //     let exist = isExisting(type)
-    //     if(!exist){
-    //         res.status(401).json({data: "Invalid type specified"});
-    //     } 
-    //     try{
-    //         const data = await models.Song.findAndCountAll({attributes:['id']});
-    //         let page = req.query.page;      // page number
-    //         let pages = Math.ceil(data.count / limit);
-    //         offset = limit * (page - 1) || 0;
-    //         const songs = await models.Song.findAll({
-    //             attributes: ['id', 'title'],
-    //             limit: limit,
-    //             offset: offset,
-    //             where: {
-    //                 status: 1,
-    //                 is_deleted:0,
-    //             },
-    //             $sort: { id: 1 }
-    //         });
-    //         let response = {
-    //             page,
-    //             pages,
-    //             offset,
-    //             songs
-    //         };
-    //         return res.status(200).json({data:response});
-    //     }catch(err){
-    //         res.send(err)
-    //         res.status(500).json({data:"Internal Server Error"});
-    //     } 
-    // }, 
-
+    
     getByLevel:async(req, res)=>{
         let label = req.params.level
         // let uid = parseInt(req.params.id)
@@ -76,7 +36,7 @@ let controller = {
                 where:{playlist_id:playlist.id, status:true},
                 attributes:['id'],
                 include:[
-                    { model:models.Song, as:'detail', attributes:['id','title', 'track_url', 'cover_img', 'featuring', 'duration'], include:[
+                    { model:models.Song, as:'detail', attributes:['id','title', 'cover_img', 'featuring', 'duration'], include:[
                         {model:models.Artist, as:'artist', attributes:['id', 'name']}
                     ]}
                 ]
@@ -90,62 +50,6 @@ let controller = {
         } 
     },
 
-    // trending:async(req, res)=>{
-    //     try{
-    //         const data = await Song.findAndCountAll();
-    //         let page = req.query.page;      // page number
-    //         let pages = Math.ceil(data.count / limit);
-    //         offset = limit * (page - 1) || 0;
-    //         const songs = await models.Song.findAll({
-    //             attributes: ['id', 'title'],
-    //             limit: limit,
-    //             offset: offset,
-    //             where: {
-    //                 status: 1,
-    //                 is_deleted:0,
-    //                 level:"trending"
-    //             },
-    //             $sort: { id: 1 }
-    //         });
-    //         let response = {
-    //             page,
-    //             pages,
-    //             offset,
-    //             songs
-    //         };
-    //         return res.status(200).json({data:response});
-    //     }catch(err){
-    //         res.status(500).json({data:"Internal Server Error"});
-    //     }
-    // }, 
-    // featured:async(req, res)=>{
-    //     try{
-    //         const data = await Song.findAndCountAll();
-    //         let page = req.query.page;      // page number
-    //         let pages = Math.ceil(data.count / limit);
-    //         offset = limit * (page - 1) || 0;
-    //         const songs = await models.Song.findAll({
-    //             attributes: ['id', 'title'],
-    //             limit: limit,
-    //             offset: offset,
-    //             where: {
-    //                 status: 1,
-    //                 is_deleted:0,
-    //                 level:"featured"
-    //             },
-    //             $sort: { id: 1 }
-    //         });
-    //         let response = {
-    //             page,
-    //             pages,
-    //             offset,
-    //             songs
-    //         };
-    //         return res.status(200).json({data:response});
-    //     }catch(err){
-    //         res.status(500).json({data:"Internal Server Error"});
-    //     }
-    // },
     addToFav:async(req, res)=>{
         let uid = parseInt(req.params.id)
         // return res.send(req.params.id);ss
@@ -163,21 +67,21 @@ let controller = {
         })
     },
 
-    getAPI:async(req,res)=>{
-        // console.log("hello")
-        ExtApi.upload('https://veezee.ir/api/v1/get/home-page-collection',(result)=>{
-            // console.log(result)
-            res.status(200).json(result)
-        })
-    },
+    // getAPI:async(req,res)=>{
+    //     // console.log("hello")
+    //     ExtApi.upload('https://veezee.ir/api/v1/get/home-page-collection',(result)=>{
+    //         // console.log(result)
+    //         res.status(200).json(result)
+    //     })
+    // },
 
     getSongs:async(req,res)=>{
-        const data = await models.Song.findAndCountAll({attributes:['id']});
+        const data = await models.Song.findAndCountAll({attributes:['id'], where:{status:1}});
         let page = req.query.page || 1;      // page number
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
         // console.log(offset)
-        const songs = await models.Song.findAll({attributes:['id', 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'type', 'year', 'price'],
+        const songs = await models.Song.findAll({attributes:['id', 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'premium', 'type', 'year', 'price'],
             limit: limit,
             where: {
                 status: 1,
@@ -254,6 +158,34 @@ let controller = {
         }
     },
 
+    getFreeSongs:async(req,res)=>{
+        const data = await models.Song.findAndCountAll({attributes:['id'], where:{status:1,premium:'0'}});
+        let page = req.query.page || 1;      // page number
+        let pages = Math.ceil(data.count / limit);
+        offset = limit * (page - 1) || 0;
+        // console.log(offset)
+        const songs = await models.Song.findAll({attributes:['id', 'title', ['cover_img','image'], 'featuring', 'producers', 'duration'],
+            limit: limit,
+            where: {
+                status: 1,
+                is_deleted:0,
+                premium:'0'
+                // level:type
+            },
+            $sort: { id: 1 },
+            include: [
+                {model:models.Album, as:'album', attributes:['id', 'title']},
+                {model:models.Artist, as:'artist', attributes:['id', 'name']}
+            ]
+        });
+        let response = {
+            page,
+            pages,
+            offset,
+            songs
+        };
+        return res.status(200).json(response);
+    },
     addStream:async()=>{
         let uid = req.query.id
         let userId = res.user.id

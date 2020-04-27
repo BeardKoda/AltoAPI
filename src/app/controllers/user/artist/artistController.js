@@ -81,8 +81,8 @@ let controller = {
                 where:{id:uid, status:"active"},
                 attributes:['id', 'name', 'cover_img', 'premium'],
                 include: [
-                    {model:models.Song, as:'songs', attributes:['id', 'title']},
-                    {model:models.Album, as:'albums', attributes:['id', 'title']}
+                    {model:models.Song, as:'songs', attributes:['id','title', 'cover_img', 'featuring', 'duration'], where:{status:1}},
+                    {model:models.Album, as:'albums', attributes:['id','title', 'cover_img'], where:{status:1}}
                 ]
             }).then(
                 data =>{
@@ -182,6 +182,23 @@ let controller = {
             offset,
         }
         return res.status(200).json(response);
+    },
+
+    publish:async(req, res)=>{
+        let uid = parseInt(req.params.id)
+        let me = parseInt(res.user.id)
+        // console.log(res.user.id, uid)
+        models.Song.update({status:true},{where:{id:uid, artist_id:me}}).then(data=>{
+            return res.status(200).json({data:"Successfully Published Song"})
+        })
+    },
+
+    unPublish:async(req, res)=>{
+        let uid = parseInt(req.params.id)
+        let me = parseInt(res.user.id)
+        models.Song.update({status:false},{where:{id:uid, artist_id:me}}).then(data=>{
+            return res.status(200).json({data:"Successfully Unpublished Song"})
+        })
     },
 }
 module.exports = controller;

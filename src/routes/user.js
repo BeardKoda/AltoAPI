@@ -1,5 +1,5 @@
 const { NODE_ENV } = require('../config/app')
-const { AuthController, SongController, ArtistController, SearchController, AlbumController, PlaylistController, UploadController } = require('../app/controllers/user')
+const { AuthController, SongController, ArtistController, SearchController, AlbumController, PlaylistController, UploadController, GenreController } = require('../app/controllers/user')
 var Request = require('../app/requests/authRequest')
 var auth = require('../app/middlewares/user/authMiddleware')
 
@@ -23,12 +23,13 @@ var user = require('express').Router()
     user.post('/logout', auth, AuthController.logout)
 
     // get All Songs API
-    user.get('/song/:level', SongController.getByLevel);
-    user.get('/song/all', SongController.getSongs);
-    user.get('/get/home-page-collection', SongController.getALL);
+    user.get('/song/:level', auth, SongController.getByLevel);
+    user.get('/song/all', auth, SongController.getSongs);
+    user.get('/song/free/all', auth, SongController.getFreeSongs);
+    // user.get('/get/home-page-collection', SongController.getALL);
     user.get('/song/detail/:id', SongController.getById);
-    user.post('/song/fav/add/:id', SongController.addToFav)
-    user.post('/song/fav/remove/:id', SongController.removeFromFav)
+    user.post('/song/fav/add/:id',auth, SongController.addToFav)
+    user.post('/song/fav/remove/:id',auth, SongController.removeFromFav)
 
     // user.post('/play/:path', auth, SongController.playUrl)
     user.post('/play', auth, SongController.playUrl)
@@ -45,12 +46,17 @@ var user = require('express').Router()
     // record Stream
     user.post('/song/:id/stream', auth, SongController.addStream);
 
+    // genre 
+    user.get('/genre/songs/:genre', GenreController.getByGenre);
+
     // Artist details
     user.post('/artist/register', auth, ArtistController.register) //artist registration
     user.get('/artist/dash', auth, ArtistController.getDash) //atist dashboard detail
     user.get('/artist/songs', auth, ArtistController.getSongs) //artist songs
     user.get('/artist/:type', auth, ArtistController.all);
     user.get('/artist/load/:id', auth, ArtistController.getById);
+    user.post('/artist/song/publish/:id', auth, ArtistController.publish)
+    user.post('/artist/song/unpublish/:id', auth, ArtistController.unPublish)
 
     // Album details
     user.get('/album/:type', auth, AlbumController.getAll);
