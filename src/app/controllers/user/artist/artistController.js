@@ -190,8 +190,8 @@ let controller = {
 
     publish:async(req, res)=>{
         let uid = parseInt(req.params.id)
-        let me = Art.artist(res.user)
-        // console.log(res.user.id, uid)
+        let me = await Art.artist(res.user)
+        console.log(res.user.id, me)
         models.Song.update({status:true},{where:{id:uid, artist_id:me.id}}).then(data=>{
             return res.status(200).json({data:"Successfully Published Song"})
         })
@@ -200,8 +200,8 @@ let controller = {
     unPublish:async(req, res)=>{
         let uid = parseInt(req.params.id)
         // let me = parseInt(res.user.id)
-        let me = Art.artist(res.user)
-        models.Song.update({status:false},{where:{id:uid, artist_id:me}}).then(data=>{
+        let me = await Art.artist(res.user)
+        models.Song.update({status:false},{where:{id:uid, artist_id:me.id}}).then(data=>{
             return res.status(200).json({data:"Successfully Unpublished Song"})
         })
     },
