@@ -5,6 +5,7 @@ var Art = require('../../../helpers/artist')
 
 let limit = 10;   // number of records per page
 let offset = 0;
+const { Op } = require("sequelize");
 
 /* GET actorController. */
 let controller = {
@@ -17,16 +18,16 @@ let controller = {
                 let pages = Math.ceil(data.count / limit);
                 offset = limit * (page - 1) || 0;
                 const artists = await models.Artist.findAll({
-                    attributes: ['id', 'name'],
+                    attributes: ['uuid', 'name'],
                     limit: limit,
                     offset: offset,
                     where: {
-                        status: "active",
+                        status: 1,
                         is_deleted:0,
                     },
                     include: [
-                        {model:models.Song, as:'songs', attributes:['id', 'title']},
-                        {model:models.Album, as:'albums', attributes:['id', 'title']}
+                        {model:models.Song, as:'songs', attributes:['uuid', 'title']},
+                        {model:models.Album, as:'albums', attributes:['uuid', 'title']}
                     ],
                     $sort: { id: 1 }
                 });
@@ -38,7 +39,7 @@ let controller = {
                 };
                 return res.status(200).json(response);
             }catch(err){
-                res.status(500).json({data:"Internal Server Error"});
+                res.status(500).json({data:err});
             } 
         }else{
             try{
@@ -74,18 +75,20 @@ let controller = {
     },
 
     getById:async(req, res)=>{
-        let uid = parseInt(req.params.id)
+        let uid = req.params.id
+        // let user = art.Artist(uid)
+        if(uid!=null){ 
         console.log(uid)
-        if(uid){    
             models.Artist.findOne({
-                where:{id:uid, status:"active"},
-                attributes:['id', 'name', 'cover_img', 'premium'],
+                where:{uuid:uid, status:1},
+                attributes:['uuid', 'id', 'name', ['cover_img','image'], 'premium'],
                 include: [
-                    {model:models.Song, as:'songs', attributes:['id','title', 'cover_img', 'featuring', 'duration'], where:{status:1}},
-                    {model:models.Album, as:'albums', attributes:['id','title', 'cover_img'], where:{status:1}}
+                    {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}}, attributes:['uuid','title', ['cover_img','image'], 'featuring', 'duration'], required: false},
+                    {model:models.Album, as:'albums', attributes:['uuid','title', ['cover_img','image']], where:{status:1},required: false}
                 ]
             }).then(
                 data =>{
+                    console.log(data)
                     return res.status(200).json(data);
                 }
             )
@@ -187,8 +190,8 @@ let controller = {
 
     publish:async(req, res)=>{
         let uid = parseInt(req.params.id)
-        let me = Art.artist(res.user)
-        // console.log(res.user.id, uid)
+        let me = await Art.artist(res.user)
+        console.log(res.user.id, me)
         models.Song.update({status:true},{where:{id:uid, artist_id:me.id}}).then(data=>{
             return res.status(200).json({data:"Successfully Published Song"})
         })
@@ -197,8 +200,8 @@ let controller = {
     unPublish:async(req, res)=>{
         let uid = parseInt(req.params.id)
         // let me = parseInt(res.user.id)
-        let me = Art.artist(res.user)
-        models.Song.update({status:false},{where:{id:uid, artist_id:me}}).then(data=>{
+        let me = await Art.artist(res.user)
+        models.Song.update({status:false},{where:{id:uid, artist_id:me.id}}).then(data=>{
             return res.status(200).json({data:"Successfully Unpublished Song"})
         })
     },

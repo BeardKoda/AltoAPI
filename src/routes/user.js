@@ -47,7 +47,6 @@ var user = require('express').Router()
     user.post('/song/:id/stream', auth, SongController.addStream);
 
     // genre 
-    user.get('/genre/songs/:genre', GenreController.getByGenre);
 
     // Artist details
     user.post('/artist/register', auth, ArtistController.register) //artist registration
@@ -63,7 +62,9 @@ var user = require('express').Router()
     user.get('/album/load/:id', auth, AlbumController.getById);
 
     // Genre
-    user.get('/genres', AlbumController.genres)
+    user.get('/genre/featured', GenreController.getALL)
+    user.get('/genre/songs/:genre', GenreController.getByGenre);
+    // user.get('/genres', AlbumController.genres)
     // Search
     user.get('/search', SearchController.search)
 

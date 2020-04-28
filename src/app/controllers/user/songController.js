@@ -36,8 +36,8 @@ let controller = {
                 where:{playlist_id:playlist.id, status:true},
                 attributes:['id'],
                 include:[
-                    { model:models.Song, as:'detail', attributes:['id','title', 'cover_img', 'featuring', 'duration'], include:[
-                        {model:models.Artist, as:'artist', attributes:['id', 'name']}
+                    { model:models.Song, as:'detail', attributes:[['uuid','id'],'title', 'cover_img', 'featuring', 'duration'], include:[
+                        {model:models.Artist, as:'artist', attributes:[['uuid','id'], 'name']}
                     ]}
                 ]
             })
@@ -81,7 +81,7 @@ let controller = {
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
         // console.log(offset)
-        const songs = await models.Song.findAll({attributes:['id', 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'premium', 'type', 'year', 'price'],
+        const songs = await models.Song.findAll({attributes:[['uuid', 'id'], 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'premium', 'type', 'year', 'price'],
             limit: limit,
             where: {
                 status: 1,
@@ -142,7 +142,7 @@ let controller = {
         let uid = req.query.id
         if(uid!=null){
             const song = await models.Song.findOne({
-                where:{id:uid},
+                where:{uuid:uid},
                 attributes:['track_url'],
                 // include:[{model:models.Album, as:'album', attributes:['id', 'title']},
                 // {model:models.Artist, as:'artist', attributes:['id', 'name']}]
@@ -191,7 +191,7 @@ let controller = {
         let userId = res.user.id
         let ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
         if(uid!=null){
-            models.Song.findOne({where:{id:uid}})
+            models.Song.findOne({where:{uuid:uid}})
             .then(song =>{
                 models.Play.create({ userId: userId, song_id:uid, ipaddress:ip})
                 .then(data =>{

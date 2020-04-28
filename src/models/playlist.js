@@ -7,6 +7,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
+    uuid:{
+      type:DataTypes.STRING,
+      allowNull:false
+    },
     title:{
         allowNull:false,
         type:DataTypes.INTEGER
