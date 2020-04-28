@@ -94,17 +94,6 @@ let controller = {
             return res.status(200).json(songs);
         }
     },
-
-    genres:async(req, res)=>{
-        let genre = [
-            {id:1, name:"Hip-Hop"},
-            {id:2, name:"Afro-Hop"},
-            {id:3, name:"Afro"},
-            {id:4, name:"EDM"},
-            {id:5, name:"Classical"},
-        ]
-        res.status(200).send(genre)
-    }
 }
 
 module.exports = controller;

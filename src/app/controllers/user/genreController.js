@@ -2,6 +2,7 @@ var models = require('../../../models');
 const { S3_URL } = require('../../../config/app')
 let limit = 50;   // number of records per page
 let offset = 0;
+const uuidv1 = require('uuid/v1');
 
 /* GET actorController. */
 let controller = {
@@ -17,7 +18,7 @@ let controller = {
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
         try{
-            const songs = await models.Song.findAll({attributes:['id', 'title', ['cover_img','image'], 'featuring', 'producers', 'duration'],
+            const songs = await models.Song.findAll({attributes:['uuid', 'title', ['cover_img','image'], 'featuring', 'producers', 'duration'],
                 limit: limit,
                 where: {
                     status: 1,
@@ -43,7 +44,18 @@ let controller = {
 
             res.status(500).json({data:err});
         } 
-    }
+    },
+    getALL:async(req,res)=>{
+        const response = await models.Genre.findAll({
+            attributes:['uuid', 'name', 'description', ['name', 'slug']],
+            limit: 14,
+            where: {
+                status: 1
+            },
+            $sort: { id: 1 },
+        });
+        return res.status(200).json(response);
+    },
 }
 
 module.exports = controller;

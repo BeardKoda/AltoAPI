@@ -4,6 +4,7 @@ const mm = require('music-metadata');
 const util = require('util');
 var base64Img = require('base64-img');
 const S3 = require('../../helpers/s3')
+const uuidv1 = require('uuid/v1');
 
 
 /* GET actorController. */
@@ -34,7 +35,7 @@ let controller = {
                         })
                     }
                     // console.log(result)
-                    models.Song.create({artist_id: artist.id, track_url:name, title:metadata.common.title, year:metadata.common.year, duration:metadata.format.duration, }).then((data) =>{
+                    models.Song.create({artist_id: artist.id, track_url:name, title:metadata.common.title, year:metadata.common.year, duration:metadata.format.duration, uuid:uuidv1() }).then((data) =>{
                         //send response
                         res.status(200).json({
                             status:"finished",

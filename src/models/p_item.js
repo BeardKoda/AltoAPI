@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull:false,
         type:DataTypes.BOOLEAN
     },
+    uuid:{
+      type:DataTypes.STRING,
+      allowNull:false
+    },
     is_deleted:{
         allowNull:false,
         type:DataTypes.BOOLEAN
