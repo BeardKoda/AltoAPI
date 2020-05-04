@@ -18,7 +18,7 @@ let controller = {
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
         try{
-            const songs = await models.Song.findAll({attributes:['uuid', 'title', ['cover_img','image'], 'featuring', 'producers', 'duration'],
+            const songs = await models.Song.findAll({attributes:[['uuid','id'], 'title', ['cover_img','image'], 'featuring', 'producers', 'duration'],
                 limit: limit,
                 where: {
                     status: 1,

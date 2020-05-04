@@ -88,7 +88,12 @@ let controller = {
                 attributes:['uuid', 'id', 'name', ['cover_img','image'], 'premium'],
                 include: [
                     {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
-                    {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}}, attributes:['uuid','title', ['cover_img','image'], 'featuring', 'duration'], required: false},
+                    {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}}, attributes:[['uuid','id'], 'title', 'featuring', 'duration'], required: false,include: [{
+                        model:models.Artist, as:'artist', include:[
+                            {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']}
+                        ]
+                    }]
+                    },
                     {model:models.Album, as:'albums', attributes:['uuid','title', ['cover_img','image']], where:{status:1},required: false}
                 ]
             }).then(
