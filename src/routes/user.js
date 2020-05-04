@@ -17,7 +17,8 @@ var user = require('express').Router()
     user.post('/account/verify/:token', AuthController.verifyAccount)
     
     // User Auth
-    user.post('/profile', auth, AuthController.getData)
+    user.get('/get/profile', auth, AuthController.getData)
+    user.post('/profile', auth, AuthController.updateProfile)
     user.post('/validate-login', auth, AuthController.refreshToken)
     user.get('/ping', auth, AuthController.ping)
     user.post('/logout', auth, AuthController.logout)
@@ -50,6 +51,8 @@ var user = require('express').Router()
 
     // Artist details
     user.post('/artist/register', auth, ArtistController.register) //artist registration
+    user.post('/artist/profile', auth, ArtistController.updateProfile) //artist profile update
+    user.get('/artist/get/profile', auth, ArtistController.getData)
     user.get('/artist/dash', auth, ArtistController.getDash) //atist dashboard detail
     user.get('/artist/songs', auth, ArtistController.getSongs) //artist songs
     user.get('/artist/:type', auth, ArtistController.all);

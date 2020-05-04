@@ -2,6 +2,8 @@
 var models = require('../../../../models');
 const uuidv1 = require('uuid/v1');
 var Art = require('../../../helpers/artist')
+const general= require('../../../helpers/general')
+const S3 = require('../../../helpers/s3')
 
 let limit = 10;   // number of records per page
 let offset = 0;
@@ -26,6 +28,7 @@ let controller = {
                         is_deleted:0,
                     },
                     include: [
+                        {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
                         {model:models.Song, as:'songs', attributes:['uuid', 'title']},
                         {model:models.Album, as:'albums', attributes:['uuid', 'title']}
                     ],
@@ -56,6 +59,7 @@ let controller = {
                         is_deleted:0,
                     },
                     include: [
+                        {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
                         {model:models.Song, as:'songs', attributes:['id', 'title']},
                         {model:models.Album, as:'albums', attributes:['id', 'title']}
                     ],
@@ -83,6 +87,7 @@ let controller = {
                 where:{uuid:uid, status:1},
                 attributes:['uuid', 'id', 'name', ['cover_img','image'], 'premium'],
                 include: [
+                    {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
                     {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}}, attributes:['uuid','title', ['cover_img','image'], 'featuring', 'duration'], required: false},
                     {model:models.Album, as:'albums', attributes:['uuid','title', ['cover_img','image']], where:{status:1},required: false}
                 ]
@@ -95,6 +100,37 @@ let controller = {
         }else{
             return res.status(202).json(null)
         }
+    },
+
+    updateProfile:async(req,res, next)=>{
+        const { full_name, stage_name, genre, dob, city, country, bio } = req.body
+        const artist = await models.Artist.findOne({where:{user_id:res.user.id}});
+        try{
+            let avatar = req.files.cover;
+            let name = artist.uuid+'/images/'+Date.now()+'_profile';
+            image_path = `src/public/uploads/`+name
+            const file = avatar.data
+            S3.upload(file, name,async(err,result)=>{
+                if(err){
+                    // console.log(err)
+                    res.status(422).json({
+                        message:'An Error Occurred',
+                        data:null
+                    })
+                }
+
+                data ={ full_name, stage_name, genre, dob, city, country, bio, avatar:name, artist_id:artist.id}
+                updated = await general.updateOrCreate(models.Artist_Profile, {artist_id:artist.id},data)
+                    res.status(200).json({
+                        status:'finished',
+                        message: 'Profile Updated',
+                        data:null
+                    })
+                })
+        }catch(err){
+            res.status(500).json({data:"Internal Server Error"});
+            throw new Error(err)
+        } 
     },
 
     register:async(req, res, next)=>{
@@ -140,8 +176,11 @@ let controller = {
             where:{id:data.id}, attributes:['id']})
             console.log(artist)
         let uid = data.id
-        recent = await models.Song.findAll({attributes:['id', 'title', 'description', 'track_url', 'cover_img', 'status', 'created_at'],
-            limit: 5,where:{artist_id:uid}})
+        recent = await models.Song.findAll({attributes:['id', 'title', 'description', 'cover_img', 'status', 'created_at'],
+            limit: 5,where:{artist_id:uid}, include:[
+            {model:models.Artist, as:'artist', attributes:['uuid'], include:[{model:models.Artist_Profile, as:'profile', attributes:[['stage_name', 'name']]}]},
+            {model:models.Genre, as:'genres', attributes:['uuid', 'name']}
+            ]})
         c_songs = await models.Song.count({where:{artist_id:uid}})
         c_stream = 0
         c_albums = await models.Album.count({where:{artist_id:uid}})
@@ -177,7 +216,11 @@ let controller = {
             where:{artist_id:uid},
             limit: limit,
             offset: offset,
-            attributes:['id', 'title', 'description', 'track_url', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'genre', 'updated_at']
+            attributes:['id', 'title', 'description', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'updated_at'], include:[{
+            model:models.Artist, as:'artist', attributes:['uuid'], include:[
+                {model:models.Artist_Profile, as:'profile', attributes:[['stage_name', 'name']]}
+            ]}
+            ]
         })
         var response = {
             songs,
@@ -205,5 +248,13 @@ let controller = {
             return res.status(200).json({data:"Successfully Unpublished Song"})
         })
     },
+
+    getData:async(req, res)=>{
+        let me = await Art.artist(res.user)
+        let _idd = me.id
+        user = await models.Artist.findOne({where:{id:_idd}, include:{model:models.Artist_Profile,as: 'profile'}})
+        return res.status(200).json({ data: user });
+      },
+  
 }
 module.exports = controller;
