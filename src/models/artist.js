@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Artist.associate = function(models) {
     // // associations can be defined here
-    Artist.hasOne(models.Artist_Profile, {as: 'profile', foreignKey:'id'})
+    Artist.hasOne(models.Artist_Profile, {as: 'profile', foreignKey:'artist_id'})
     Artist.hasMany(models.Song, {as: 'songs', foreignKey:'artist_id'})
     Artist.hasMany(models.Album, {as: 'albums', foreignKey:'artist_id'})
   };
