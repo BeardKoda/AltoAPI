@@ -82,7 +82,7 @@ let controller = {
         let uid = req.params.id
         // let user = art.Artist(uid)
         if(uid!=null){ 
-        console.log(uid)
+        // console.log(uid)
             models.Artist.findOne({
                 where:{uuid:uid, status:1},
                 attributes:['uuid', 'id', 'name', ['cover_img','image'], 'premium'],
@@ -179,9 +179,9 @@ let controller = {
         console.log(data)
         artist = await models.Artist.findOne({
             where:{id:data.id}, attributes:['id']})
-            console.log(artist)
+            // console.log(artist)
         let uid = data.id
-        recent = await models.Song.findAll({attributes:['id', 'title', 'description', 'cover_img', 'status', 'created_at'],
+        recent = await models.Song.findAll({attributes:[['uuid','id'], 'title', 'description', 'cover_img', 'status', 'created_at'],
             limit: 5,where:{artist_id:uid}, include:[
             {model:models.Artist, as:'artist', attributes:['uuid'], include:[{model:models.Artist_Profile, as:'profile', attributes:[['stage_name', 'name']]}]},
             {model:models.Genre, as:'genres', attributes:['uuid', 'name']}
@@ -206,22 +206,11 @@ let controller = {
         let page = req.query.page || 1;      // page number
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
-        // console.log("Herererer",offset, limit, page)
-        // var songs = await models.Artist.findOne({
-        //     where:{id:uid, status:"active"},
-        //     attributes:['id', 'name', 'cover_img', 'premium'],
-        //     limit: limit,
-        //     offset: offset,
-        //     include: [
-        //         {model:models.Song, as:'songs', attributes:['id', 'title', 'description', 'track_url', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'genre', 'level', 'updated_at']},
-        //         {model:models.Album, as:'albums', attributes:['id', 'title']}
-        //     ]
-        // })
         var songs = await models.Song.findAll({
             where:{artist_id:uid},
             limit: limit,
             offset: offset,
-            attributes:['id', 'title', 'description', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'updated_at'], include:[{
+            attributes:[['uuid','id'], 'title', 'description', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'updated_at'], include:[{
             model:models.Artist, as:'artist', attributes:['uuid'], include:[
                 {model:models.Artist_Profile, as:'profile', attributes:[['stage_name', 'name']]}
             ]}
