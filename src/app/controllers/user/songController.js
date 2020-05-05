@@ -37,7 +37,7 @@ let controller = {
                 attributes:['id'],
                 include:[
                     { model:models.Song, as:'detail', attributes:[['uuid','id'],'title', 'cover_img', 'featuring', 'duration'], include:[
-                        {model:models.Artist, as:'artist', attributes:[['uuid','id'], 'name']}
+                        {model:models.Artist, as:'artist', attributes:[['uuid','id'], 'name'], include:[{model:models.Artist_Profile, as:'profile', attributes:['stage_name']}]}
                     ]}
                 ]
             })
@@ -164,7 +164,7 @@ let controller = {
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
         // console.log(offset)
-        const songs = await models.Song.findAll({attributes:['id', 'title', ['cover_img','image'], 'featuring', 'producers', 'duration'],
+        const songs = await models.Song.findAll({attributes:[['uuid','id'], 'title', ['cover_img','image'], 'featuring', 'producers', 'duration'],
             limit: limit,
             where: {
                 status: 1,
@@ -175,7 +175,7 @@ let controller = {
             $sort: { id: 1 },
             include: [
                 {model:models.Album, as:'album', attributes:['id', 'title']},
-                {model:models.Artist, as:'artist', attributes:['id', 'name']}
+                {model:models.Artist, as:'artist', attributes:['id', 'name'],include:[{model:models.Artist_Profile, as:'profile', attributes:['stage_name']}]}
             ]
         });
         let response = {

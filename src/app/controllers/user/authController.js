@@ -98,7 +98,7 @@ let controller = {
       }
     },
     
-    getToken: (user) =>{
+    getToken:(user) =>{
       var token = jwt.sign({id:user.id}, config.jwt_secret, {
         expiresIn: 86400 // expires in 24 hours
       })
@@ -124,10 +124,48 @@ let controller = {
       )
     },
 
-    getData:(req, res,next)=>{
-      // res.status(200).json(true);
-      res.status(200).json({ message: true });
-      return;
+    updateProfile:async(req,res, next)=>{
+      return null;
+      const { full_name, stage_name, genre, dob, city, country, bio } = req.body
+      const artist = await models.Artist.findOne({where:{user_id:res.user.id}});
+      try{
+          let avatar = req.files.cover;
+          let name = artist.uuid+'/images/'+Date.now()+'_profile';
+          image_path = `src/public/uploads/`+name
+          // await avatar.mv(`src/public/uploads/` + name);
+          // await avatar.mv(image_path)
+          const file = avatar.data
+          S3.upload(file, name,async(err,result)=>{
+              if(err){
+                  // console.log(err)
+                  res.status(422).json({
+                      message:'An Error Occurred',
+                      data:null
+                  })
+              }
+
+              data ={ full_name, stage_name, genre, dob, city, country, bio, avatar:name, artist_id:artist.id}
+              updated = await general.updateOrCreate(models.Artist_Profile, {artist_id:artist.id},data)
+                  res.status(200).json({
+                      status:'finished',
+                      message: 'Profile Updated',
+                      data:null
+                  })
+              })
+      }catch(err){
+          res.status(500).json({data:"Internal Server Error"});
+          throw new Error(err)
+      } 
+    },
+
+    getData:async(req, res)=>{
+      let _idd = res.user.id
+      // console.log(res.user)
+      // return res.status(200).json(res);
+      
+      user = await models.User.findOne({where:{id:_idd}})
+      console.log(user)
+      return res.status(200).json({ message: user });
     },
 
     logout:(req, res)=>{
