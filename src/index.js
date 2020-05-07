@@ -75,6 +75,7 @@ app.use(helmet());
 var allowedOrigins = [
                       'http://localhost:4200',
                       'https://altostream.app', 
+                      'https://www.altostream.app',
                       'https://staging.altostream.app'
                     ];
 // enabling CORS for all requests
