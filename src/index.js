@@ -72,23 +72,23 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // adding Helmet to enhance your API's security
 app.use(helmet());
-var allowedOrigins = [
-                      'http://localhost:4200',
-                      'https://altostream.app', 
-                      'https://www.altostream.app',
-                      'https://staging.altostream.app'
-                    ];
+// var allowedOrigins = [
+//                       'http://localhost:4200',
+//                       'https://altostream.app', 
+//                       'https://www.altostream.app',
+//                       'https://staging.altostream.app'
+//                     ];
 // enabling CORS for all requests
 app.use(cors({
   origin: function(origin, callback){
     // allow requests with no origin 
     // (like mobile apps or curl requests)
     if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){
-      var msg = 'The CORS policy for this site does not ' +
-                'allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
+    // if(allowedOrigins.indexOf(origin) === -1){
+    //   var msg = 'The CORS policy for this site does not ' +
+    //             'allow access from the specified Origin.';
+    //   return callback(new Error(msg), false);
+    // }
     return callback(null, true);
   }
 }));
