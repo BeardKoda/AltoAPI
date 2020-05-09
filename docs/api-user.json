@@ -113,7 +113,7 @@
                 }
             }
         },
-        "/profile": {
+        "/get/profile": {
             "get": {
                 "summary": "Fetch User's Data.",
                 "description": "It Fetches the Authenticated User's Data.",
@@ -126,6 +126,77 @@
                 "operationId": "getUser",
                 "tags": [
                     "User"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "post": {
+                "summary": "Update User's Data.",
+                "description": "It Updates the Authenticated User's Data.",
+                "security": [
+                    {
+                        "APIKeyHeader": [],
+                        "APIKeyBody": []
+                    }
+                ],
+                "operationId": "getUser",
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "in": "formdata",
+                        "name": "full_name",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formdata",
+                        "name": "stage_name",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formdata",
+                        "name": "bio",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formdata",
+                        "name": "genre",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formdata",
+                        "name": "dob",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formdata",
+                        "name": "city",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "in": "formdata",
+                        "name": "country",
+                        "type": "string",
+                        "required": true
+                    }
                 ],
                 "produces": [
                     "application/json"
