@@ -9,11 +9,17 @@ exports.validate = (method) => {
          ]   
       }
       case 'register': {
-       return [ 
-          body('name', 'Username is Required').exists(),
-          body('email', 'Email is Invalid').exists().isEmail(),
-          body('password', 'Password is Invalid').exists(),
-         ]   
-      }
+        return [ 
+           body('name', 'Username is Required').exists(),
+           body('email', 'Email is Invalid').exists().isEmail(),
+           body('password', 'Password is Invalid').exists(),
+          ]   
+       } 
+       case 'reset': {
+        return [ 
+           body('oldpassword', 'Password is Invalid').exists(),
+           body('newpassword', 'Password is Invalid').exists(),
+          ]   
+       }
     }
   }

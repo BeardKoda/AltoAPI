@@ -7,5 +7,6 @@ const Emitter = new EventEmitter();
     });
     // Emitter.on('tested',require('./listeners/sendEmail'));
     Emitter.on('sendMail:Register',require('./listeners/sendEmail'));
+    Emitter.on('sendMail:Reset',require('./listeners/resetEmail'));
 
 module.exports = Emitter
