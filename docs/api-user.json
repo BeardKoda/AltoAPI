@@ -113,6 +113,52 @@
                 }
             }
         },
+        "/password/forgot": {
+            "post": {
+                "summary": "Sends Password reset Mail.",
+                "description": "Password reset Link.",
+                "tags": [
+                    "Authentication"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "data",
+                        "description": "Data parameters needed to create account.",
+                        "schema": {
+                            "type": "object",
+                            "required": [
+                                "name",
+                                "email",
+                                "password"
+                            ],
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "email": {
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "user authenticated"
+                    }
+                }
+            }
+        },
         "/get/profile": {
             "get": {
                 "summary": "Fetch User's Data.",
@@ -263,7 +309,7 @@
                         "in": "path",
                         "name": "id",
                         "type": "integer",
-                        "description": "The Id of Song to Fetch",
+                        "description": "The Id/UUID of Song to Fetch",
                         "required": true,
                         "format": "int64"
                     }
