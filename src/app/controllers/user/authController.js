@@ -7,7 +7,7 @@ var auth = require('../../middlewares/user/authMiddleware')
 const uuidv1 = require('uuid/v1');
 var models = require('../../../models');
 var eventer=require('../../events/emitter')
-const general= require('../../../helpers/general')
+const general= require('../../helpers/general')
 
 
 /* GET actorController. */
