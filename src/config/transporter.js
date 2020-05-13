@@ -6,7 +6,7 @@ options ={
     secure: true,
     auth: {
         // should be replaced with real sender's account
-        user: MAIL.USER || 'contact@brindocorp.co',
+        user: MAIL.USER || ' contact@altostream.app',
         pass: MAIL.PASS || 'Josuha@332512'
     }
 }
