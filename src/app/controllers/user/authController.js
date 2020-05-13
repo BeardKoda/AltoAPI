@@ -117,9 +117,7 @@ let controller = {
             })
           }
           if(user){
-            models.Password.create({
-              email:req.body.email,token
-            }).then((resp)=>{
+            general.updateOrCreate(models.Password, {email:req.body.email},{ email:req.body.email,token}).then((resp)=>{
               eventer.emit('sendMail:Reset', resp)
               res.status(200).json({
                 message:'Password Reset sent. Check Your Email!'
