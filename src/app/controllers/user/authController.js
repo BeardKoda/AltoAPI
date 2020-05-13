@@ -118,8 +118,10 @@ let controller = {
             })
           }
           if(user){
-            general.updateOrCreate(models.Password, {email:req.body.email},{ email:req.body.email,token}).then((resp)=>{
-              eventer.emit('sendMail:Reset', resp)
+            general.updateOrCreate(models.Password, {email:req.body.email},{ email:req.body.email,token}).then(async(resp)=>{
+              let data = await models.Password.findOne({where:{email:req.body.email}})              
+              // console.log(resp, data)
+              eventer.emit('sendMail:Reset', data)
               res.status(200).json({
                 message:'Password Reset sent. Check Your Email!'
               })
