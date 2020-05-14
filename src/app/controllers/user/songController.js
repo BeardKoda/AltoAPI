@@ -37,7 +37,7 @@ let controller = {
                 where:{playlist_id:playlist.id, status:true},
                 attributes:['id'],
                 include:[
-                    { model:models.Song, as:'detail', attributes:[['uuid','id'],'title', 'cover_img', 'featuring', 'duration'], include:[
+                    { model:models.Song, as:'detail', where:{status:true}, attributes:[['uuid','id'],'title', 'cover_img', 'featuring', 'duration'], include:[
                         {model:models.Artist, as:'artist', attributes:[['uuid','id'], 'name'], include:[{model:models.Artist_Profile, as:'profile', attributes:['stage_name']}]}
                     ]}
                 ]
@@ -85,7 +85,7 @@ let controller = {
         const songs = await models.Song.findAll({attributes:[['uuid', 'id'], 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'premium', 'type', 'year', 'price'],
             limit: limit,
             where: {
-                status: 1,
+                status: true,
                 is_deleted:0,
                 // level:type
             },
