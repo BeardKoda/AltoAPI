@@ -61,7 +61,7 @@ jobs:
           command: ssh -o StrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "cd /home/production/api && git pull https://$GITHUB_USER:$GITHUB_PASS@github.com/$GITHUB_USER/AltoAPI"
       - run:
           name: Installing Node Modules && restarting PM2
-          command: ssh -o StrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "cd /home/production/api && npm install && pm2 restart 0"
+          command: ssh -o StrictHostKeyChecking=no -v $DROPLET_USER@$DROPLET_IP "cd /home/production/api && npm install && pm2 restart all"
 
 workflows:
   version: 2

@@ -7,6 +7,7 @@ var auth = require('../../middlewares/user/authMiddleware')
 const uuidv1 = require('uuid/v1');
 var models = require('../../../models');
 var eventer=require('../../events/emitter')
+const general= require('../../helpers/general')
 
 
 /* GET actorController. */
@@ -94,6 +95,112 @@ let controller = {
           })
       })
       }catch(err) {
+        return next(err)
+      }
+    },
+
+    sendPasswordLink:(req,res,next)=>{
+      // console.log(req.body)
+      // res.send(req.body)
+      try {
+        const errors = validationResult(req); // Finds the validation errors in this request and wraps them in an object with handy functions
+  
+        if (!errors.isEmpty()) {
+          res.status(422).json({ errors: errors.array() });
+          return;
+        }
+        var token = Math.random().toString(36).substr(2, 30)
+        // var hashedPassword = bcrypt.hashSync(req.body.password, 8);
+        models.User.findOne({where:{email:req.body.email}}).then(user => {
+          if(!user){
+            res.status(401).json({
+              message:"Account dosen't exit "
+            })
+          }
+          if(user){
+            general.updateOrCreate(models.Password, {email:req.body.email},{ email:req.body.email,token}).then(async(resp)=>{
+              let data = await models.Password.findOne({where:{email:req.body.email}})              
+              // console.log(resp, data)
+              eventer.emit('sendMail:Reset', data)
+              res.status(200).json({
+                message:'Password Reset sent. Check Your Email!'
+              })
+            })
+          }
+        },err => {
+          res.status(500).json({
+            message: err
+          })
+        })
+      }catch(err){
+        return next(err)
+      }
+    },
+    verifyReset:(req, res,next)=>{
+      console.log(req.params.token)
+      try{
+        models.Password.findOne({where:{token:req.params.token}}).then(async(pass) => {
+          if(pass){
+            res.status(200).json({
+              message:"token valid"
+            })
+          }
+          if(!pass){
+            res.status(400).json({
+              message:"token invalid"
+            })
+          }
+        })
+      }catch(err){
+        return next(err)
+      }
+    },
+    resetPassword:async(req,res,next)=>{
+      console.log(req.body)
+      let token = req.params.token
+      // res.send(req.body)
+      try {
+        const errors = validationResult(req); // Finds the validation errors in this request and wraps them in an object with handy functions
+  
+        if (!errors.isEmpty()) {
+          res.status(422).json({ errors: errors.array() });
+          return;
+        }
+        
+        models.Password.findOne({where:{token:token}}).then(async(pass) => {
+          // console.log(pass)
+          if(pass){
+            models.User.findOne({where:{email:pass.email}}).then(
+              async(user) => {
+                if(!user){
+                  res.status(422).json({
+                    message:"user not found"
+                  })
+                }
+                if(user){
+                  var passwordIsValid = bcrypt.compareSync(req.body.oldpassword, user.password);
+                  if(!passwordIsValid) return res.status(400).json({
+                    message:"Password do not match"
+                  })
+                  if(passwordIsValid){
+                    user.password = bcrypt.hashSync(req.body.newpassword, 8);
+                    await user.save();
+                    await models.Password.destroy({where:{token:token}})
+                    res.status(200).json({
+                      message:'Password Updated Successfully'
+                    })
+                  }
+                }
+              },
+              err => {
+                res.status(500).json({
+                  error: err
+                })
+              }
+            )
+          }
+        })
+      }catch(err){
         return next(err)
       }
     },

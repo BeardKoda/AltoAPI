@@ -12,12 +12,13 @@ let offset = 0;
 /* GET actorController. */
 let controller = {
     getById:async(req, res)=>{
-        let uid = parseInt(req.params.id)
-        const song = await models.Song.findOne({
-            where:{id:uid},
-            attributes:['id','title', 'price', 'genre', 'track_url', 'cover_img', 'year', 'privacy', 'type'],
+        let uid = req.params.id
+        console.log(uid)
+        models.Song.findOne({
+            where:{uuid:uid},
+            attributes:[['uuid','id'],'title', 'genre', 'cover_img', 'duration', 'year',  'type'],
             include:[{model:models.Album, as:'album', attributes:['id', 'title']},
-            {model:models.Artist, as:'artist', attributes:['id', 'name']}]
+            {model:models.Artist, as:'artist', attributes:['id', 'name'], include:{model:models.Artist_Profile, as:'profile', attributes:['stage_name']}}]
         }).then(
             song =>{
                 res.status(200).json({data:song});
