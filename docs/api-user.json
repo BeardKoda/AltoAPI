@@ -308,7 +308,7 @@
                     {
                         "in": "path",
                         "name": "id",
-                        "type": "integer",
+                        "type": "string",
                         "description": "The Id/UUID of Song to Fetch",
                         "required": true,
                         "format": "int64"
@@ -344,7 +344,7 @@
                     {
                         "in": "path",
                         "name": "id",
-                        "type": "integer",
+                        "type": "string",
                         "description": "The Id of Song to Fetch",
                         "required": true,
                         "format": "int64"
@@ -380,7 +380,7 @@
                     {
                         "in": "path",
                         "name": "id",
-                        "type": "integer",
+                        "type": "string",
                         "description": "The Id of Song to Fetch",
                         "required": true,
                         "format": "int64"
@@ -416,7 +416,7 @@
                     {
                         "in": "path",
                         "name": "id",
-                        "type": "integer",
+                        "type": "string",
                         "description": "The Id of Song to Fetch",
                         "required": true,
                         "format": "int64"
@@ -478,7 +478,7 @@
                     {
                         "in": "path",
                         "name": "id",
-                        "type": "integer",
+                        "type": "string",
                         "description": "The Id of Song to Fetch",
                         "required": true,
                         "format": "int64"
@@ -704,7 +704,7 @@
                     {
                         "in": "path",
                         "name": "id",
-                        "type": "integer",
+                        "type": "string",
                         "description": "The Id of Song to Fetch",
                         "required": true,
                         "format": "int64"
@@ -776,7 +776,7 @@
                     {
                         "in": "path",
                         "name": "id",
-                        "type": "integer",
+                        "type": "string",
                         "description": "The Id of Album to Fetch",
                         "required": true,
                         "format": "int64"
@@ -897,7 +897,7 @@
             "type": "object",
             "properties": {
                 "id": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
