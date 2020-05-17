@@ -226,19 +226,22 @@ let controller = {
     },
 
     publish:async(req, res)=>{
-        let uid = parseInt(req.params.id)
+        console.log("wowo")
+        let uid = req.params.id
         let me = await Art.artist(res.user)
-        console.log(res.user.id, me)
-        models.Song.update({status:true},{where:{id:uid, artist_id:me.id}}).then(data=>{
+        console.log(res.user.id, me.id, uid)
+        models.Song.update({status:1},{where:{uuid:uid, artist_id:me.id}}).then(data=>{
+            // console.log(data)
             return res.status(200).json({data:"Successfully Published Song"})
         })
     },
 
     unPublish:async(req, res)=>{
-        let uid = parseInt(req.params.id)
+        let uid = req.params.id
         // let me = parseInt(res.user.id)
         let me = await Art.artist(res.user)
-        models.Song.update({status:false},{where:{id:uid, artist_id:me.id}}).then(data=>{
+        models.Song.update({status:0},{where:{uuid:uid, artist_id:me.id}}).then(data=>{
+            // console.log("herer")
             return res.status(200).json({data:"Successfully Unpublished Song"})
         })
     },
