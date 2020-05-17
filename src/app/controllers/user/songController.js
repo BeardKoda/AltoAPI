@@ -32,7 +32,7 @@ let controller = {
         models.Artist.findOne({
             where:{uuid:uid},
             attributes:['uuid','name'],
-            include:[{model:models.Song, as:'songs',
+            include:[{model:models.Song, as:'songs', where:{status:1},
             limit: 10, attributes:[['uuid','id'],'title', 'cover_img', 'year'] }]
         }).then(
             song =>{
