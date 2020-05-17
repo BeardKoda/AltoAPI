@@ -17,10 +17,26 @@ let controller = {
         models.Song.findOne({
             where:{uuid:uid},
             attributes:[['uuid','id'],'title', 'genre', 'cover_img', 'duration', 'year',  'type'],
-            include:[{model:models.Album, as:'album', attributes:['id', 'title']},
-            {model:models.Artist, as:'artist', attributes:['id', 'name'], include:{model:models.Artist_Profile, as:'profile', attributes:['stage_name']}}]
+            include:[{model:models.Album, as:'album', attributes:['uuid', 'title']},
+            {model:models.Artist, as:'artist', attributes:['uuid', 'name'], include:{model:models.Artist_Profile, as:'profile', attributes:['stage_name']}}]
         }).then(
             song =>{
+                res.status(200).json({data:song});
+            }
+        )
+        // return res.send('Welcome');
+    },
+    getByArtist:async(req, res)=>{
+        let uid = req.params.id
+        // console.log(uid)
+        models.Artist.findOne({
+            where:{uuid:uid},
+            attributes:['uuid','name'],
+            include:[{model:models.Song, as:'songs',
+            limit: 10, attributes:[['uuid','id'],'title', 'cover_img', 'year'] }]
+        }).then(
+            song =>{
+                console.log(song)
                 res.status(200).json({data:song});
             }
         )

@@ -32,6 +32,7 @@ var user = require('express').Router()
     user.get('/song/free/all', auth, SongController.getFreeSongs);
     // user.get('/get/home-page-collection', SongController.getALL);
     user.get('/song/detail/:id', SongController.getById);
+    user.get('/song/artist/:id', SongController.getByArtist);
     user.post('/song/fav/add/:id',auth, SongController.addToFav)
     user.post('/song/fav/remove/:id',auth, SongController.removeFromFav)
 
