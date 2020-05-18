@@ -6,7 +6,7 @@ const {ExtApi, isExisting}  = require('../../helpers/api');
 const S3 = require('../../helpers/s3')
 
 const { S3_URL } = require('../../../config/app')
-let limit = 50;   // number of records per page
+let limit = 20;   // number of records per page
 let offset = 0;
 
 /* GET actorController. */
@@ -32,7 +32,7 @@ let controller = {
         models.Artist.findOne({
             where:{uuid:uid},
             attributes:['uuid','name'],
-            include:[{model:models.Song, as:'songs',
+            include:[{model:models.Song, as:'songs', where:{status:1},
             limit: 10, attributes:[['uuid','id'],'title', 'cover_img', 'year'] }]
         }).then(
             song =>{

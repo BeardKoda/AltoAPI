@@ -14,7 +14,9 @@ var fs = require('fs')
 var morgan = require('morgan')
 var rfs = require('rotating-file-stream')
 const addRequestId = require('express-request-id')();
+const responseTime = require('response-time')
 
+const RedisCache = require('./app/middlewares/user/checkCache') 
 const docs = express()
 const app = express()
 
@@ -23,6 +25,8 @@ const { PORT } = require('./config/app')
 const docRoute = require('./routes/docs.js')
 var appRoute = require('./routes/index.js')
 var userRoute = require('./routes/user.js')
+
+// app.use(responseTime());
 
 
 // create a rotating write stream
@@ -121,6 +125,7 @@ app.use(function(err, req, res, next) {
 // userRoute()
 // docRoute(docs)
 // artistRoute(artist)
+// app.use(RedisCache)
 app.use('/aa', appRoute)
 app.use('/', docRoute)
 app.use('/user/api/v1', userRoute)
