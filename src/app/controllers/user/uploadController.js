@@ -35,7 +35,7 @@ let controller = {
                         })
                     }
                     // console.log(result)
-                    models.Song.create({artist_id: artist.id, track_url:name, title:req.body.name||metadata.common.title, year:metadata.common.year, duration:metadata.format.duration, uuid:uuidv1() }).then((data) =>{
+                    models.Song.create({artist_id: artist.id, track_url:name, title:req.body.name||metadata.common.title, year:metadata.common.year, duration:metadata.format.duration, uuid:uuidv1(), level:0 }).then((data) =>{
                         //send response
                         res.status(200).json({
                             status:"finished",
