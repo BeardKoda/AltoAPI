@@ -6,7 +6,7 @@ const {ExtApi, isExisting}  = require('../../helpers/api');
 const S3 = require('../../helpers/s3')
 
 const { S3_URL } = require('../../../config/app')
-let limit = 50;   // number of records per page
+let limit = 20;   // number of records per page
 let offset = 0;
 
 /* GET actorController. */
