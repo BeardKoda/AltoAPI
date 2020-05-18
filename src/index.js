@@ -16,7 +16,7 @@ var rfs = require('rotating-file-stream')
 const addRequestId = require('express-request-id')();
 const responseTime = require('response-time')
 
-const RedisCache = require('./app/middlewares/user/checkCache') 
+// const RedisCache = require('./app/middlewares/user/checkCache') 
 const docs = express()
 const app = express()
 
