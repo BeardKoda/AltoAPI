@@ -4,6 +4,7 @@ const uuidv1 = require('uuid/v1');
 var Art = require('../../../helpers/artist')
 const general= require('../../../helpers/general')
 const S3 = require('../../../helpers/s3')
+const { Op } = require("sequelize");
 
 let limit = 50;   // number of records per page
 let offset = 0;
@@ -208,7 +209,7 @@ let controller = {
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
         var songs = await models.Song.findAll({
-            where:{artist_id:uid},
+            where:{artist_id:uid, title:{[Op.ne]:null}},
             limit: limit,
             offset: offset,
             attributes:[['uuid','id'], 'title', 'description', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'updated_at'], include:[{
