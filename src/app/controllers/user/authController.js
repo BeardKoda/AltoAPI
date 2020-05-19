@@ -292,16 +292,19 @@ let controller = {
       return res.status(200).json({user:null, message:"still active"})
     },
 
-    resendVerification:(req,res)=>{
+    resendVerification:async(req,res)=>{
       let { email } = req.body;
+      var token = Math.random().toString(36).substr(2, 5)
       if(!email){
         res.status(422).json({message:'No email specified'})
       }
+      await models.User.update({'email_token':token}, {where:{email:email}})
       models.User.findOne({where:{email:email}}).then(
-        user => {
-            res.status(200).json({
-              message:"Account Verification Mail Sent"
-            })
+        async user => {
+          await eventer.emit('sendMail:Register', user)
+          res.status(200).json({
+            message:"Account Verification Mail Sent"
+          })
         },
         err => {
           res.status(500).json({
@@ -313,20 +316,27 @@ let controller = {
 
     verifyAccount:(req,res)=>{
       let token = req.params.token
-      // console.log(token)
+      console.log(token)
 
       models.User.findOne({where:{email_token:token}}).then(
-        user => {
+        async user => {
           if(user!= null){
-            var c_date = moment(user.createdAt).format('YYYY-MM-DD hh:mm:ss');
+            var c_date = moment(user.updatedAt).format('YYYY-MM-DD hh:mm:ss');
             var now = moment().format('YYYY-MM-DD hh:mm:ss')
-            var status = moment(c_date).add(1, 'hours').format('YYYY-MM-DD hh:mm:ss');
-            var isvalid = moment(now).isSameOrBefore(status)
-            // console.log(c_date, status, moment().format('Y-MM-DD '), isvalid)
+            var status = moment(c_date).add(1, 'day').format('YYYY-MM-DD hh:mm:ss');
+            var isvalid = moment(now).isSameOrBefore(status, 'hour')
+            console.log(now, status, moment().format('Y-MM-DD'), isvalid)
             if(isvalid){
-              res.status(200).json({
-                message:"Account Activated Successfully"
-              })
+              var verified = await models.User.update({'email_verified_at':moment().format('YYYY-MM-DD hh:mm:ss')}, {where:{email_token:token}})
+              if(verified){
+                res.status(200).json({
+                  message:"Account Activated Successfully"
+                })
+              }else{
+                res.status(422).json({
+                  error:"Activation Error!, Contact Admin"
+                })
+              }
             }else{
               res.status(422).json({
                 error:"Activation code Expired"

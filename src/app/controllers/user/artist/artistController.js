@@ -8,7 +8,6 @@ const { Op } = require("sequelize");
 
 let limit = 50;   // number of records per page
 let offset = 0;
-const { Op } = require("sequelize");
 
 /* GET actorController. */
 let controller = {
