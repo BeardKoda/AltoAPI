@@ -65,29 +65,42 @@ let controller = {
         const { title, genre, cover, featuring, producers, release, description } = req.body
         const artist = await models.Artist.findOne({where:{user_id:res.user.id}});
         try{
-            let avatar = req.files.cover;
-            let name = artist.uuid+'/images/'+Date.now()+'_'+avatar.name;
-            image_path = `src/public/uploads/`+name
-            // await avatar.mv(`src/public/uploads/` + name);
-            // await avatar.mv(image_path)
-            const file = avatar.data
-            S3.upload(file, name,async(err,result)=>{
-                if(err){
-                    // console.log(err)
-                    res.status(422).json({
-                        message:'An Error Occurred',
-                        data:null
-                    })
-                }
-                // console.log(result, "hhh")
-                data ={title, genre, featuring,producers,release, description, cover_img:name}
-                models.Song.update(data,{where:{id:uid}}).then((resp)=>{
-                    res.status(200).json({
-                        message: 'Song Updated',
-                        data:null
+            if(req.files){
+                let avatar = req.files.cover;
+                let name = artist.uuid+'/images/'+Date.now()+'_'+avatar.name;
+                image_path = `src/public/uploads/`+name
+                // await avatar.mv(`src/public/uploads/` + name);
+                // await avatar.mv(image_path)
+                const file = avatar.data
+                S3.upload(file, name,async(err,result)=>{
+                    if(err){
+                        // console.log(err)
+                        res.status(422).json({
+                            message:'An Error Occurred',
+                            data:null
+                        })
+                    }
+                    data ={title, genre, featuring, producers, release, description, cover_img:name}
+                    console.log(result, "hhh", data)
+                    models.Song.update(data,{where:{id:uid}}).then((resp)=>{
+                        console.log(resp)
+                        res.status(200).json({
+                            message: 'Song Updated',
+                            data:null
+                        })
                     })
                 })
-            })
+            }else{
+                    data ={title, genre, featuring, producers,release, description, cover_img:cover}
+                    console.log("hhh", data)
+                    models.Song.update(data,{where:{id:uid}}).then((resp)=>{
+                        console.log(resp)
+                        res.status(200).json({
+                            message: 'Song Updated',
+                            data:null
+                        })
+                    })
+            }
         }catch(err){
             res.status(500).json({data:"Internal Server Error"});
             throw new Error(err)

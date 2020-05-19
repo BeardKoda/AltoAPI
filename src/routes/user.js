@@ -61,6 +61,7 @@ var user = require('express').Router()
     user.get('/artist/songs', auth, ArtistController.getSongs) //artist songs
     user.get('/artist/:type', auth, ArtistController.all);
     user.get('/artist/load/:id', auth, ArtistController.getById);
+    user.get('/artist/song/:id', auth, ArtistController.getBySongId);
     user.post('/artist/song/publish/:id', auth, ArtistController.publish)
     user.post('/artist/song/unpublish/:id', auth, ArtistController.unPublish)
 

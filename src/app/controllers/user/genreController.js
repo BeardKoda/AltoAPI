@@ -47,7 +47,7 @@ let controller = {
     },
     getALL:async(req,res)=>{
         const response = await models.Genre.findAll({
-            attributes:['uuid', 'name', 'description', ['name', 'slug']],
+            attributes:['uuid', 'id', 'name', 'description', ['name', 'slug']],
             limit: 14,
             where: {
                 status: 1
