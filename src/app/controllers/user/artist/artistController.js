@@ -5,7 +5,7 @@ var Art = require('../../../helpers/artist')
 const general= require('../../../helpers/general')
 const S3 = require('../../../helpers/s3')
 
-let limit = 10;   // number of records per page
+let limit = 50;   // number of records per page
 let offset = 0;
 const { Op } = require("sequelize");
 
@@ -16,6 +16,7 @@ let controller = {
         if(type){
             try{
                 const data = await models.Artist.findAndCountAll();
+                console.log(data.row)
                 let page = req.query.page;      // page number
                 let pages = Math.ceil(data.count / limit);
                 offset = limit * (page - 1) || 0;
@@ -28,7 +29,7 @@ let controller = {
                         is_deleted:0,
                     },
                     include: [
-                        {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
+                        {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio'], required:true},
                         {model:models.Song, as:'songs', attributes:['uuid', 'title']},
                         {model:models.Album, as:'albums', attributes:['uuid', 'title']}
                     ],
