@@ -1,9 +1,6 @@
 const { body, validationResult } = require('express-validator/check')
-var jwt = require('jsonwebtoken');
 var models = require('../../../models');
-const Song = models.Song;
-const {ExtApi, isExisting}  = require('../../helpers/api');
-const S3 = require('../../helpers/s3')
+const { Op } = require("sequelize");
 
 const { S3_URL } = require('../../../config/app')
 let limit = 20;   // number of records per page
@@ -196,8 +193,8 @@ let controller = {
                 status: 1,
                 is_deleted:0,
                 premium:'0',
-                title:{ $not: null},
-                level:{$not:'0'}
+                title:{ [Op.ne]: null},
+                level:{[Op.ne]:'0'}
             },
             $sort: { id: 1 },
             include: [
