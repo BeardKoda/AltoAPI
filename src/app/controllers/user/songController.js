@@ -179,7 +179,7 @@ let controller = {
             is_deleted:0,
             premium:'0',
             title:{ [Op.ne]: null},
-            level:{[Op.ne]:'0'}
+            // level:{[Op.ne]:null}
         }});
         let page = parseFloat(req.query.page )|| 1;      // page number
         let pages = Math.ceil(data.count / limit);
@@ -194,7 +194,7 @@ let controller = {
                 is_deleted:0,
                 premium:'0',
                 title:{ [Op.ne]: null},
-                level:{[Op.ne]:'0'}
+                // level:{[Op.ne]:null}
             },
             $sort: { id: 1 },
             include: [
