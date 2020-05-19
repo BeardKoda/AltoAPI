@@ -226,6 +226,22 @@ let controller = {
         return res.status(200).json(response);
     },
 
+    getBySongId:async(req, res)=>{
+        let uid = req.params.id
+        console.log(uid)
+        models.Song.findOne({
+            where:{uuid:uid},
+            attributes:['id','title', 'genre', 'description', 'cover_img', 'release', 'duration', 'year',  'type'],
+            include:[{model:models.Album, as:'album', attributes:['uuid', 'title']},
+            {model:models.Artist, as:'artist', attributes:['uuid', 'name'], include:{model:models.Artist_Profile, as:'profile', attributes:['stage_name']}}]
+        }).then(
+            song =>{
+                res.status(200).json({data:song});
+            }
+        )
+        // return res.send('Welcome');
+    },
+
     publish:async(req, res)=>{
         console.log("wowo")
         let uid = req.params.id
