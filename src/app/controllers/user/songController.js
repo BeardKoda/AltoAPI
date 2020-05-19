@@ -5,6 +5,7 @@ const { Op } = require("sequelize");
 const { S3_URL } = require('../../../config/app')
 let limit = 20;   // number of records per page
 let offset = 0;
+const uuidv1 = require('uuid/v1');
 
 /* GET actorController. */
 let controller = {
@@ -215,18 +216,24 @@ let controller = {
         return res.status(200).json(response);
     },
     
-    addStream:async()=>{
-        let uid = req.query.id
+    addStream:async(req,res)=>{
+        let uid = req.params.id
         let userId = res.user.id
         let ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+        // console.log(uid, userId, ip)
         if(uid!=null){
-            models.Song.findOne({where:{uuid:uid}})
+            models.Song.findOne({where:{uuid:uid}, attributes:['uuid']})
             .then(song =>{
-                models.Play.create({ userId: userId, song_id:uid, ipaddress:ip})
-                .then(data =>{
-                    return res.status(200).json({data:true});
-                })
-            })
+                if(song){ 
+                    models.Stream.create({ user_id: userId, song_id:uid, ipaddress:ip, uuid:uuidv1()})
+                    .then(data =>{
+                        // console.log(data)
+                        res.status(200).json({data:true});
+                    })
+                }
+                else res.status(422).json({data:false});
+            }).catch(err=>{
+                console.log(err)})
         }else{
             // console.log('no path')
             res.send('no song is played')

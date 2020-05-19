@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Play = sequelize.define('Stream', {
+  const Stream = sequelize.define('Stream', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -13,11 +13,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     user_id:{
         allowNull:false,
-        type:DataTypes.INTEGER
+        type:DataTypes.STRING
     },
     song_id:{
         allowNull:false,
-        type:DataTypes.INTEGER
+        type:DataTypes.STRING
     },
     ipaddress:{
         allowNull:false,
@@ -26,7 +26,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     is_deleted:{
         allowNull:false,
-        type:DataTypes.BOOLEAN
+        type:DataTypes.STRING,
+        allowNull:true
     }
   }, {
     underscored: true,
@@ -34,10 +35,10 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: 'updated_at',
     tableName:'streams'
   });
-  Play.associate = function(models) {
+  Stream.associate = function(models) {
     // associations can be defined here
-    Play.belongsTo(models.User, {as:'user', foreignKey:'user_id', targetKey:'id'})
-    Play.belongsTo(models.Song, {as:'Song', foreignKey:'song_id', targetKey:'id'})
+    // Stream.belongsTo(models.User, {as:'user', foreignKey:'user_id', targetKey:'id'})
+    Stream.belongsTo(models.Song, {as:'Song', foreignKey:'song_id', targetKey:'uuid'})
   };
-  return Play;
+  return Stream;
 };
