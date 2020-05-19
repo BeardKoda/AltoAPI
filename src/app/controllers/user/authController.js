@@ -136,6 +136,7 @@ let controller = {
         return next(err)
       }
     },
+
     verifyReset:(req, res,next)=>{
       console.log(req.params.token)
       try{
@@ -155,6 +156,7 @@ let controller = {
         return next(err)
       }
     },
+    
     resetPassword:async(req,res,next)=>{
       console.log(req.body)
       let token = req.params.token
