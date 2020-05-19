@@ -199,7 +199,8 @@ let controller = {
             $sort: { id: 1 },
             include: [
                 {model:models.Album, as:'album', attributes:['id', 'title']},
-                {model:models.Artist, as:'artist', attributes:['id', 'name'],include:[{model:models.Artist_Profile, as:'profile', attributes:['stage_name']}]}
+                {model:models.Artist, as:'artist', attributes:['id', 'name'],
+                include:[{model:models.Artist_Profile, as:'profile', attributes:['stage_name'], required:true}]}
             ]
         });
         let response = {
