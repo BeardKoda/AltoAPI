@@ -90,7 +90,7 @@ let controller = {
                 attributes:['uuid', 'id', 'name', ['cover_img','image'], 'premium'],
                 include: [
                     {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
-                    {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}}, attributes:[['uuid','id'], 'title', 'featuring', 'duration'], required: false,include: [{
+                    {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}, title:{[Op.ne]:null}}, attributes:[['uuid','id'], 'title', 'featuring', 'duration'], required: false,include: [{
                         model:models.Artist, as:'artist', include:[
                             {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']}
                         ]
@@ -209,7 +209,7 @@ let controller = {
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
         var songs = await models.Song.findAll({
-            where:{artist_id:uid, title:{[Op.ne]:null}},
+            where:{artist_id:uid},
             limit: limit,
             offset: offset,
             attributes:[['uuid','id'], 'title', 'description', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'updated_at'], include:[{
