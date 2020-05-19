@@ -212,6 +212,7 @@ let controller = {
         expiresIn: 86400 // expires in 24 hours
       })
       var data = {
+        "is_verified":user.email_verified_at !=null?true:false,
         "username" : user.name,
         "email":user.email,
         "is_artist":user.is_artist,
