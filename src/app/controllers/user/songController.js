@@ -23,17 +23,19 @@ let controller = {
         )
         // return res.send('Welcome');
     },
+    
     getByArtist:async(req, res)=>{
         let uid = req.params.id
         // console.log(uid)
         models.Artist.findOne({
             where:{uuid:uid},
             attributes:['uuid','name'],
-            include:[{model:models.Song, as:'songs', where:{status:1},
+            include:[{model:models.Song, as:'songs', where:{status:1,
+                is_deleted:0, title:{[Op.ne]:null}},
             limit: 10, attributes:[['uuid','id'],'title', 'cover_img', 'year'] }]
         }).then(
             song =>{
-                console.log(song)
+                // console.log(song)
                 res.status(200).json({data:song});
             }
         )
@@ -51,7 +53,7 @@ let controller = {
                 attributes:['id'],
                 include:[
                     { model:models.Song, as:'detail', where:{status:true}, attributes:[['uuid','id'],'title', 'cover_img', 'featuring', 'duration'], include:[
-                        {model:models.Artist, as:'artist', attributes:[['uuid','id'], 'name'], include:[{model:models.Artist_Profile, as:'profile', attributes:['stage_name']}]}
+                        {model:models.Artist, as:'artist', attributes:[['uuid','id'], 'name'], required:true, include:[{model:models.Artist_Profile, as:'profile', required:true, attributes:['stage_name']}]}
                     ]}
                 ]
             })
