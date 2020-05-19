@@ -214,6 +214,7 @@ let controller = {
         };
         return res.status(200).json(response);
     },
+    
     addStream:async()=>{
         let uid = req.query.id
         let userId = res.user.id

@@ -4,6 +4,7 @@ const uuidv1 = require('uuid/v1');
 var Art = require('../../../helpers/artist')
 const general= require('../../../helpers/general')
 const S3 = require('../../../helpers/s3')
+const { Op } = require("sequelize");
 
 let limit = 50;   // number of records per page
 let offset = 0;
@@ -89,7 +90,7 @@ let controller = {
                 attributes:['uuid', 'id', 'name', ['cover_img','image'], 'premium'],
                 include: [
                     {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
-                    {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}}, attributes:[['uuid','id'], 'title', 'featuring', 'duration'], required: false,include: [{
+                    {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}, title:{[Op.ne]:null}}, attributes:[['uuid','id'], 'title', 'featuring', 'duration'], required: false,include: [{
                         model:models.Artist, as:'artist', include:[
                             {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']}
                         ]
