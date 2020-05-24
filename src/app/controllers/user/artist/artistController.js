@@ -177,7 +177,7 @@ let controller = {
 
     getDash:async(req,res,next)=>{
         var data = await Art.artist(res.user)
-        console.log(data)
+        // console.log(data)
         artist = await models.Artist.findOne({
             where:{id:data.id}, attributes:['id']})
             // console.log(artist)
@@ -188,9 +188,8 @@ let controller = {
             {model:models.Genre, as:'genres', attributes:['uuid', 'name']}
             ]})
         c_songs = await models.Song.count({where:{artist_id:uid}})
-        c_stream = 0
+        c_stream = await models.Stream.count({include:{model:models.Song, as:'Song',where:{artist_id:uid}}})
         c_albums = await models.Album.count({where:{artist_id:uid}})
-        // console.log(c_songs)
         response = {
             songs:c_songs, albums:c_albums, streams:c_stream,
             recent
