@@ -41,6 +41,7 @@ var errorLogStream = rfs.createStream('error.log', {
 })
 app.use(addRequestId);
 
+
 morgan.token('id', function getId(req) {
     return req.id
 });

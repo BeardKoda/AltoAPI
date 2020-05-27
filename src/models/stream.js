@@ -15,9 +15,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull:false,
         type:DataTypes.STRING
     },
+    data:{
+        allowNull:true,
+        type:DataTypes.STRING
+    },
     song_id:{
         allowNull:false,
-        type:DataTypes.STRING
+        foreignKey:true,
+        type:DataTypes.STRING,
     },
     ipaddress:{
         allowNull:false,
@@ -38,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
   Stream.associate = function(models) {
     // associations can be defined here
     // Stream.belongsTo(models.User, {as:'user', foreignKey:'user_id', targetKey:'id'})
-    Stream.belongsTo(models.Song, {as:'Song', foreignKey:'song_id', targetKey:'uuid'})
+    Stream.belongsTo(models.Song, {as:'Song'})
   };
   return Stream;
 };

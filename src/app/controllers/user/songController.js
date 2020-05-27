@@ -53,7 +53,7 @@ let controller = {
                 where:{playlist_id:playlist.id, status:true},
                 attributes:['id'],
                 include:[
-                    { model:models.Song, as:'detail', where:{status:true}, attributes:[['uuid','id'],'title', 'cover_img', 'featuring', 'duration'], include:[
+                    { model:models.Song, as:'detail', where:{status:true, is_deleted:0}, attributes:[['uuid','id'],'title', 'cover_img', 'featuring', 'duration'], include:[
                         {model:models.Artist, as:'artist', attributes:[['uuid','id'], 'name'], required:true, include:[{model:models.Artist_Profile, as:'profile', required:true, attributes:['stage_name']}]}
                     ]}
                 ]
@@ -219,30 +219,30 @@ let controller = {
         return res.status(200).json(response);
     },
     
-    addStream:async(req,res)=>{
-        let uid = req.params.id
-        let userId = res.user.id
-        let ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
-        // console.log(uid, userId, ip)
-        if(uid!=null){
-            models.Song.findOne({where:{uuid:uid}, attributes:['uuid']})
-            .then(song =>{
-                if(song){ 
-                    models.Stream.create({ user_id: userId, song_id:uid, ipaddress:ip, uuid:uuidv1()})
-                    .then(data =>{
-                        // console.log(data)
-                        res.status(200).json({data:true});
-                    })
-                }
-                else res.status(422).json({data:false});
-            }).catch(err=>{
-                console.log(err)})
-        }else{
-            // console.log('no path')
-            res.send('no song is played')
-        }
-        // res.status(200).json({ip})
-    }
+    // addStream:async(req,res)=>{
+    //     let uid = req.params.id
+    //     let userId = res.user.id
+    //     let ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+    //     console.log(uid, userId, ip)
+    //     if(uid!=null){
+    //         models.Song.findOne({where:{uuid:uid}, attributes:['id']})
+    //         .then(song =>{
+    //             if(song){ 
+    //                 models.Stream.create({ user_id: userId, song_id:song.id, ipaddress:ip, uuid:uuidv1()})
+    //                 .then(data =>{
+    //                     // console.log(data)
+    //                     res.status(200).json({data:true});
+    //                 })
+    //             }
+    //             else res.status(422).json({data:false});
+    //         }).catch(err=>{
+    //             console.log(err)})
+    //     }else{
+    //         // console.log('no path')
+    //         res.send('no song is played')
+    //     }
+    //     // res.status(200).json({ip})
+    // }
 }
 
 module.exports = controller;

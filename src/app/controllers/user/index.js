@@ -6,11 +6,9 @@ const UploadController = require('./uploadController')
 const AlbumController = require('./albumController')
 const SearchController = require('./searchController')
 const GenreController= require('./genreController')
+const StreamController = require('./streamController')
 
 module.exports = {
-    AuthController,
-    SongController,
-    ArtistController,
-    PlaylistController,
-    UploadController, AlbumController, SearchController,GenreController
+    AuthController, SongController, ArtistController, PlaylistController,
+    UploadController, AlbumController, SearchController,GenreController, StreamController
 }

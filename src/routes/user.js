@@ -1,5 +1,5 @@
 const { NODE_ENV } = require('../config/app')
-const { AuthController, SongController, ArtistController, SearchController, AlbumController, PlaylistController, UploadController, GenreController } = require('../app/controllers/user')
+const { AuthController, SongController, ArtistController, SearchController, AlbumController, PlaylistController, UploadController, GenreController,StreamController } = require('../app/controllers/user')
 var Request = require('../app/requests/authRequest')
 var auth = require('../app/middlewares/user/authMiddleware')
 
@@ -49,7 +49,7 @@ var user = require('express').Router()
     user.delete('/playlist/delete', auth, PlaylistController.deletePlaylist);
 
     // record Stream
-    user.post('/song/:id/stream', auth, SongController.addStream);
+    user.post('/song/:id/stream', auth, StreamController.addStream);
 
     // genre 
 

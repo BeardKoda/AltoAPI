@@ -6,13 +6,14 @@ const general= require('../../../helpers/general')
 const S3 = require('../../../helpers/s3')
 const { Op } = require("sequelize");
 
-let limit = 50;   // number of records per page
+let limit = 20;   // number of records per page
 let offset = 0;
 
 /* GET actorController. */
 let controller = {
     all:async(req, res)=>{
         let type = req.params.type
+        console.log('here')
         if(type){
             try{
                 const data = await models.Artist.findAndCountAll();
@@ -33,7 +34,11 @@ let controller = {
                     ],
                     include: [
                         {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio'], required:true},
-                        {model:models.Song, as:'songs', attributes:['uuid', 'title']},
+                        {model:models.Song, as:'songs', attributes:['uuid', 'title', 
+                            // include: [
+                            //     [Sequelize.fn("COUNT", Sequelize.col("streams.id")), "streamCount"]
+                            // ]
+                        ], include:{ model:models.Stream, as:'streams' } },
                         {model:models.Album, as:'albums', attributes:['uuid', 'title']}
                     ],
                     $sort: { id: 1 }
@@ -81,6 +86,39 @@ let controller = {
                 res.status(500).json({data:"Internal Server Error"});
             } 
         }
+    },
+
+    featured:async(req,res)=>{
+        try{
+            const data = await models.Artist.findAndCountAll();
+            let page = req.query.page;      // page number
+            let pages = Math.ceil(data.count / limit);
+            offset = limit * (page - 1) || 0;
+            const artists = await models.Artist.findAll({
+                attributes: ['id', 'name'],
+                limit: limit,
+                offset: offset,
+                where: {
+                    status: "active",
+                    is_deleted:0,
+                },
+                include: [
+                    {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
+                    {model:models.Song, as:'songs', attributes:['id', 'title']},
+                    {model:models.Album, as:'albums', attributes:['id', 'title']}
+                ],
+                $sort: { id: 1 }
+            });
+            let response = {
+                page,
+                pages,
+                offset,
+                artists
+            };
+            return res.status(200).json(response);
+        }catch(err){
+            res.status(500).json({data:"Internal Server Error"});
+        } 
     },
 
     getById:async(req, res)=>{
@@ -180,46 +218,60 @@ let controller = {
     },
 
     getDash:async(req,res,next)=>{
-        var data = await Art.artist(res.user)
-        // console.log(data)
-        artist = await models.Artist.findOne({
-            where:{id:data.id}, attributes:['id']})
-            // console.log(artist)
-        let uid = data.id
-        recent = await models.Song.findAll({attributes:[['uuid','id'], 'title', 'description', 'cover_img', 'status', 'created_at'],
-            limit: 5,where:{artist_id:uid}, include:[
-            {model:models.Artist, as:'artist', attributes:['uuid'], include:[{model:models.Artist_Profile, as:'profile', attributes:[['stage_name', 'name']]}]},
-            {model:models.Genre, as:'genres', attributes:['uuid', 'name']}
-            ]})
-        c_songs = await models.Song.count({where:{artist_id:uid}})
-        c_stream = await models.Stream.count({include:{model:models.Song, as:'Song',where:{artist_id:uid}}})
-        c_albums = await models.Album.count({where:{artist_id:uid}})
-        response = {
-            songs:c_songs, albums:c_albums, streams:c_stream,
-            recent
+        try{
+            var data = await Art.artist(res.user)
+            let uid = data.id
+            let recent =await models.Song.findAll({
+                limit: 5,
+                offset:0,
+                distinct: true,
+                subQuery: false,
+                where:{artist_id:uid, is_deleted:0}, 
+                attributes:{include:['uuid', 'id', 'title', 'description', 'cover_img', 'status', 'created_at', [models.sequelize.fn("COUNT", models.sequelize.col("streams.song_id")), "streamCount"]]},
+                include: [
+                    {model: models.Stream, as:'streams', attributes: []},
+                    {model:models.Artist, as:'artist', attributes:['uuid'], 
+                    include:[{model:models.Artist_Profile, as:'profile', attributes:[['stage_name', 'name']]}]},
+                    {model:models.Genre, as:'genres', attributes:['uuid', 'name']}
+                ],
+                group: ['Song.id'],
+            })
+            c_songs = await models.Song.count({where:{artist_id:uid, is_deleted:0}})
+            c_stream = await models.Stream.count({include:{model:models.Song, as:'Song',where:{artist_id:uid, is_deleted:0}}})
+            c_albums = await models.Album.count({where:{artist_id:uid}})
+            response = {
+                songs:c_songs, albums:c_albums, streams:c_stream,
+                recent
+            }
+            return res.status(200).json(response);
+        }catch(err){
+          console.log(err)  
+          return res.status(400).json(err);
         }
-        return res.status(200).json(response);
     },
 
     getSongs:async(req, res)=>{
-        // console.log("here")
         var art = await Art.artist(res.user)
         let uid = art.id
-        const data = await models.Song.findAndCountAll({where:{artist_id:uid}, attributes:['id']});
+        const data = await models.Song.findAndCountAll({where:{artist_id:uid, is_deleted:0}, attributes:['id']});
         console.log(data)
         let page = req.query.page || 1;      // page number
         let pages = Math.ceil(data.count / limit);
         offset = limit * (page - 1) || 0;
         var songs = await models.Song.findAll({
-            where:{artist_id:uid},
+            where:{artist_id:uid, is_deleted:0},
+            distinct: true,
+            subQuery: false,
             limit: limit,
             offset: offset,
-            order: '"created_at" DESC',
-            attributes:[['uuid','id'], 'title', 'description', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'updated_at'], include:[{
-            model:models.Artist, as:'artist', attributes:['uuid'], include:[
-                {model:models.Artist_Profile, as:'profile', attributes:[['stage_name', 'name']]}
-            ]}
-            ]
+            order: [['created_at', 'DESC']],
+            attributes:[['uuid','id'], 'title', 'description', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'updated_at',[models.sequelize.fn("COUNT", models.sequelize.col("streams.song_id")), "streamCount"]], include:[
+                {model: models.Stream, as:'streams', attributes: []},
+                {model:models.Artist, as:'artist', attributes:['uuid'], include:[
+                    {model:models.Artist_Profile, as:'profile', attributes:[['stage_name', 'name']]}
+                ]}
+            ],
+            group: ['Song.id'],
         })
         var response = {
             songs,
@@ -247,7 +299,7 @@ let controller = {
     },
 
     publish:async(req, res)=>{
-        console.log("wowo")
+        // console.log("wowo")
         let uid = req.params.id
         let me = await Art.artist(res.user)
         console.log(res.user.id, me.id, uid)
