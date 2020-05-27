@@ -56,6 +56,7 @@ let controller = {
     //         res.status(500).json({data:"Internal Server Error"});
     //     } 
     // }, 
+    
     getAll:async(req,res)=>{
         let type = req.params.type
         if(type){

@@ -107,8 +107,9 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Song.belongsTo(models.Album, {as: 'album', foreignKey: 'album_id', targetKey: 'id',})
     Song.belongsTo(models.Artist, {as: 'artist', foreignKey: 'artist_id', targetKey: 'id',})
-    Song.belongsTo(models.P_Item, {as: 'song', foreignKey: 'song_id', targetKey: 'id',})
+    Song.belongsTo(models.P_Item, {as: 'song', foreignKey: 'id', targetKey: 'id',})
     Song.belongsTo(models.Genre, {as: 'genres', foreignKey: 'genre', targetKey: 'id',})
+    Song.hasMany(models.Stream, {as: 'streams'})
   };
   return Song;
 };

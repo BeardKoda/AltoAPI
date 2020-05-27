@@ -106,7 +106,59 @@ let controller = {
             res.status(500).json({data:"Internal Server Error"});
             throw new Error(err)
         } 
-    }
+    },
+    uploadAlbum:async (req, res) => {
+        // console.log(res.user)
+        const artist = await models.Artist.findOne({where:{user_id:res.user.id}});
+        // console.log(artist)
+        if (!req.files || Object.keys(req.files).length === 0) {
+            return res.status(400).json({message:'No files were uploaded.'});
+        }
+        if(!req.files.audio.mimetype.includes('audio') ){
+            return res.status(400).json({message:'File type not supported Required.'});
+        }
+        else {
+            try {
+                let songId=uuidv1()
+                let avatar = req.files.audio;
+                let name = artist.uuid+'/music/'+Date.now()+'_'+songId;
+                // let music_path = 'src/public/uploads/'+name
+                
+                metadata = await mm.parseBuffer(avatar.data)
+                S3.upload(avatar.data, name,async(err,result)=>{
+                    if(err){
+                        // console.log(err)
+                        res.status(422).json({
+                            message:'An Error Occurred',
+                            data:err
+                        })
+                    }
+                    // console.log(result)
+                    models.Song.create({artist_id: artist.id, track_url:name, title:req.body.name||metadata.common.title, year:metadata.common.year, duration:metadata.format.duration, uuid:songId, level:0 }).then((data) =>{
+                        //send response
+                        res.status(200).json({
+                            status:"finished",
+                            message: 'File is uploaded',
+                            data: {
+                                song:data,
+                                name: avatar.name,
+                                mimetype: avatar.mimetype,
+                                size: avatar.size,
+                                // cover_img:JSON.stringify(metadata.common.picture)
+                            }
+                        })
+                    }, err=>{
+                        // console.log(err)
+                        res.status(422).json({
+                            message:"an Error occurred"
+                        })
+                    })
+                })
+            } catch (err) {
+                res.status(500).send(err);
+            }
+        }
+    },
 }
 
 module.exports = controller;
