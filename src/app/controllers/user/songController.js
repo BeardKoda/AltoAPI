@@ -177,13 +177,15 @@ let controller = {
     },
 
     getFreeSongs:async(req,res)=>{
-        const data = await models.Song.findAndCountAll({attributes:['id'], where:{
-            status: 1,
-            is_deleted:0,
-            premium:'0',
-            title:{ [Op.ne]: null},
-            // level:{[Op.ne]:null}
-        }});
+        const data = await models.Song.findAndCountAll({attributes:['id', 'created_at'],
+            where:{
+                status: 1,
+                is_deleted:0,
+                premium:'0',
+                title:{ [Op.ne]: null},
+                // level:{[Op.ne]:null}
+            }
+        });
         let page = parseFloat(req.query.page )|| 1;      // page number
         let pages = Math.ceil(data.count / limit);
         limit = parseFloat(req.query.limit) || limit;
@@ -192,6 +194,7 @@ let controller = {
         const songs = await models.Song.findAll({attributes:[['uuid','id'], 'title', ['cover_img','image'], 'featuring', 'producers', 'duration'],
             limit,
             offset,
+            order:[[ 'created_at', 'DESC' ]], 
             where: {
                 status: 1,
                 is_deleted:0,

@@ -21,13 +21,16 @@ let controller = {
                 let pages = Math.ceil(data.count / limit);
                 offset = limit * (page - 1) || 0;
                 const artists = await models.Artist.findAll({
-                    attributes: ['uuid', 'name'],
+                    attributes: ['uuid', 'name', 'created_at'],
                     limit: limit,
                     offset: offset,
                     where: {
                         status: 1,
                         is_deleted:0,
                     },
+                    order:[
+                        ['created_at', 'DESC']
+                    ],
                     include: [
                         {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio'], required:true},
                         {model:models.Song, as:'songs', attributes:['uuid', 'title']},
@@ -43,6 +46,7 @@ let controller = {
                 };
                 return res.status(200).json(response);
             }catch(err){
+                console.log(err)
                 res.status(500).json({data:err});
             } 
         }else{
@@ -210,6 +214,7 @@ let controller = {
             where:{artist_id:uid},
             limit: limit,
             offset: offset,
+            order: '"created_at" DESC',
             attributes:[['uuid','id'], 'title', 'description', 'cover_img', 'featuring', 'producers','status', 'type', 'year', 'price', 'updated_at'], include:[{
             model:models.Artist, as:'artist', attributes:['uuid'], include:[
                 {model:models.Artist_Profile, as:'profile', attributes:[['stage_name', 'name']]}
@@ -267,7 +272,7 @@ let controller = {
         let _idd = me.id
         user = await models.Artist.findOne({where:{id:_idd}, include:{model:models.Artist_Profile,as: 'profile'}})
         return res.status(200).json({ data: user });
-      },
+    },
   
 }
 module.exports = controller;
