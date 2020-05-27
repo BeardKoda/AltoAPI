@@ -60,7 +60,8 @@ let controller = {
         let type = req.params.type
         if(type){
             const songs = await models.Album.findAll({
-                limit: 10, attributes:['id', 'title'],
+                limit: 10, attributes:['id', 'title', 'created_at'],
+                order:[[ 'created_at', 'DESC' ]], 
                 where: {
                     status: 1,
                     is_deleted:0,
@@ -70,6 +71,7 @@ let controller = {
                 include: [
                     {
                         model:models.Song, as:'songs', attributes:['id', 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'type', 'year', 'price'], 
+                        order:[[ 'created_at', 'DESC' ]]
                     },
                     {model:models.Artist, as:'artist', attributes:['id', 'name']}
                 ]
