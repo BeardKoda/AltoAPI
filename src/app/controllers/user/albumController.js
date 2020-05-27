@@ -97,6 +97,23 @@ let controller = {
             return res.status(200).json(songs);
         }
     },
+    getFeatured:async(req,res)=>{
+        const songs = await models.Album.findAll({
+            limit: 10, attributes:['id', 'title'],
+            where: {
+                status: 1,
+                is_deleted:0,
+            },
+            $sort: { id: 1 },
+            include: [
+                {
+                    model:models.Song, as:'songs', attributes:['id', 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'type', 'year', 'price'], 
+                },
+                {model:models.Artist, as:'artist', attributes:['id', 'name']}
+            ]
+        });
+        return res.status(200).json(songs);
+    },
 }
 
 module.exports = controller;

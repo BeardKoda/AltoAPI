@@ -53,7 +53,7 @@ let controller = {
                 where:{playlist_id:playlist.id, status:true},
                 attributes:['id'],
                 include:[
-                    { model:models.Song, as:'detail', where:{status:true}, attributes:[['uuid','id'],'title', 'cover_img', 'featuring', 'duration'], include:[
+                    { model:models.Song, as:'detail', where:{status:true, is_deleted:0}, attributes:[['uuid','id'],'title', 'cover_img', 'featuring', 'duration'], include:[
                         {model:models.Artist, as:'artist', attributes:[['uuid','id'], 'name'], required:true, include:[{model:models.Artist_Profile, as:'profile', required:true, attributes:['stage_name']}]}
                     ]}
                 ]

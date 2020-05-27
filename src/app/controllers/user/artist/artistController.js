@@ -16,14 +16,6 @@ let controller = {
         console.log('here')
         if(type){
             try{
-            //    let son =await models.Song.findAll({
-            //         attributes:['uuid', 'title', 'created_at', [models.sequelize.fn("COUNT", models.sequelize.col("streams.song_id")), "streamCount"]],
-            //         include: [{
-            //             model: models.Stream, as:'streams', attributes: []
-            //         }],
-            //         group: ['Song.id']
-            //     })
-                // console.log(son)
                 const data = await models.Artist.findAndCountAll();
                 console.log(data.row)
                 let page = req.query.page;      // page number
@@ -94,6 +86,39 @@ let controller = {
                 res.status(500).json({data:"Internal Server Error"});
             } 
         }
+    },
+
+    featured:async(req,res)=>{
+        try{
+            const data = await models.Artist.findAndCountAll();
+            let page = req.query.page;      // page number
+            let pages = Math.ceil(data.count / limit);
+            offset = limit * (page - 1) || 0;
+            const artists = await models.Artist.findAll({
+                attributes: ['id', 'name'],
+                limit: limit,
+                offset: offset,
+                where: {
+                    status: "active",
+                    is_deleted:0,
+                },
+                include: [
+                    {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
+                    {model:models.Song, as:'songs', attributes:['id', 'title']},
+                    {model:models.Album, as:'albums', attributes:['id', 'title']}
+                ],
+                $sort: { id: 1 }
+            });
+            let response = {
+                page,
+                pages,
+                offset,
+                artists
+            };
+            return res.status(200).json(response);
+        }catch(err){
+            res.status(500).json({data:"Internal Server Error"});
+        } 
     },
 
     getById:async(req, res)=>{
@@ -274,7 +299,7 @@ let controller = {
     },
 
     publish:async(req, res)=>{
-        console.log("wowo")
+        // console.log("wowo")
         let uid = req.params.id
         let me = await Art.artist(res.user)
         console.log(res.user.id, me.id, uid)

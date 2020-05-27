@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull:false,
         type:DataTypes.STRING
     },
+    data:{
+        allowNull:true,
+        type:DataTypes.STRING
+    },
     song_id:{
         allowNull:false,
         foreignKey:true,
