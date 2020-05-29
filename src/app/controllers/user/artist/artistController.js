@@ -31,7 +31,7 @@ let controller = {
                     },
                     include: [
                         {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name'], required:true},
-                        {model:models.Song, as:'songs', where:{status:1, is_deleted:0}, attributes:['uuid', 'status'], required:true},
+                        {model:models.Song, as:'songs', where:{status:{[Op.ne]:0}, title:{[Op.ne]:null}, is_deleted:0}, attributes:['uuid', 'status'], required:true},
                     ],
                     order:models.sequelize.literal('songCount DESC'),
                     // $sort: { id: 1 },
@@ -93,7 +93,7 @@ let controller = {
                 attributes:['uuid', 'id', 'name', ['cover_img','image'], 'premium'],
                 include: [
                     {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
-                    {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}, title:{[Op.ne]:null}}, attributes:[['uuid','id'], 'title', 'featuring', 'duration'], required: false,include: [{
+                    {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}, title:{[Op.ne]:null}, is_deleted:0}, attributes:[['uuid','id'], 'title', 'featuring', 'duration'], required: false,include: [{
                         model:models.Artist, as:'artist', include:[
                             {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']}
                         ]
