@@ -36,6 +36,7 @@ let controller = {
                         {model:models.Album, as:'albums', attributes:['uuid', 'title']}
                     ],
                     // order:models.sequelize.literal('songCount DESC'),
+                    order: [['created_at', 'DESC']],
                     $sort: { id: 1 },
                     // group: ['songs.status'],
                 });
