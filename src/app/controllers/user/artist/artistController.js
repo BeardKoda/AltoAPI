@@ -13,31 +13,29 @@ let offset = 0;
 let controller = {
     all:async(req, res)=>{
         // let type = req.params.type
-        // console.log('here')
-        // if(type){
             try{
                 const data = await models.Artist.findAndCountAll();
                 let page = req.query.page;      // page number
                 let pages = Math.ceil(data.count / limit);
                 offset = limit * (page - 1) || 0;
                 const artists = await models.Artist.findAll({
-                    attributes: ['uuid', 'id', 'name', 'created_at'],
+                    // attributes: ['uuid', 'id', 'name', 'created_at'],
+                    attributes: ['uuid', 'id', 'name', 'created_at', [models.sequelize.fn("COUNT", models.sequelize.col("songs.uuid")), "songCount"]],
                     limit: limit,
                     offset: offset,
-                    // distinct: true,
-                    // subQuery: false,
+                    distinct: true,
+                    subQuery: false,
                     where: {
                         status: 1,
                         is_deleted:0,
                     },
                     include: [
-                        {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name',], required:true},
-                        {model:models.Song, as:'songs',attributes:[]},
+                        {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name'], required:true},
+                        {model:models.Song, as:'songs', where:{status:true, is_deleted:0}, attributes:['uuid', 'status'], required:true},
                     ],
-                    // order:models.sequelize.literal('songCount DESC'),
-                    order: [['created_at', 'DESC']],
+                    order:models.sequelize.literal('songCount DESC'),
                     // $sort: { id: 1 },
-                    // group: ['songs.status'],
+                    group: ['Artist.id'],
                 });
                 let response = {
                     page,
@@ -50,38 +48,6 @@ let controller = {
                 console.log(err)
                 res.status(500).json({data:err});
             } 
-        // }else{
-        //     try{
-        //         const data = await models.Artist.findAndCountAll();
-        //         let page = req.query.page;      // page number
-        //         let pages = Math.ceil(data.count / limit);
-        //         offset = limit * (page - 1) || 0;
-        //         const artists = await models.Artist.findAll({
-        //             attributes: ['id', 'name'],
-        //             limit: limit,
-        //             offset: offset,
-        //             where: {
-        //                 status: "active",
-        //                 is_deleted:0,
-        //             },
-        //             include: [
-        //                 {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
-        //                 {model:models.Song, as:'songs', attributes:['id', 'title']},
-        //                 {model:models.Album, as:'albums', attributes:['id', 'title']}
-        //             ],
-        //             $sort: { id: 1 }
-        //         });
-        //         let response = {
-        //             page,
-        //             pages,
-        //             offset,
-        //             artists
-        //         };
-        //         return res.status(200).json(response);
-        //     }catch(err){
-        //         res.status(500).json({data:"Internal Server Error"});
-        //     } 
-        // }
     },
 
     featured:async(req,res)=>{
