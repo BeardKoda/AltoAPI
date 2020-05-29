@@ -13,35 +13,33 @@ let offset = 0;
 let controller = {
     all:async(req, res)=>{
         let type = req.params.type
-        console.log('here')
+        // console.log('here')
         if(type){
             try{
                 const data = await models.Artist.findAndCountAll();
-                console.log(data.row)
                 let page = req.query.page;      // page number
                 let pages = Math.ceil(data.count / limit);
                 offset = limit * (page - 1) || 0;
                 const artists = await models.Artist.findAll({
-                    attributes: ['uuid', 'name', 'created_at'],
+                    attributes: ['uuid', 'id', 'name', 'created_at', [models.sequelize.fn("COUNT", models.sequelize.col("songs.uuid")), "songCount"]],
                     limit: limit,
                     offset: offset,
+                    distinct: true,
+                    subQuery: false,
                     where: {
                         status: 1,
                         is_deleted:0,
                     },
-                    order:[
-                        ['created_at', 'DESC']
-                    ],
                     include: [
                         {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio'], required:true},
-                        {model:models.Song, as:'songs', attributes:['uuid', 'title', 
-                            // include: [
-                            //     [Sequelize.fn("COUNT", Sequelize.col("streams.id")), "streamCount"]
-                            // ]
-                        ], include:{ model:models.Stream, as:'streams' } },
+                        {model:models.Song, as:'songs', where:{status:1, is_deleted:0}, attributes:[]},
                         {model:models.Album, as:'albums', attributes:['uuid', 'title']}
                     ],
-                    $sort: { id: 1 }
+                    order:[
+                        ['updated_at', 'DESC'], ['songs', 'id', 'DESC']
+                    ],
+                    // $sort: { id: 1 },
+                    group: ['songs.status'],
                 });
                 let response = {
                     page,
