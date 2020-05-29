@@ -31,7 +31,7 @@ let controller = {
                     },
                     include: [
                         {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name'], required:true},
-                        {model:models.Song, as:'songs', where:{status:true, is_deleted:0}, attributes:['uuid', 'status'], required:true},
+                        {model:models.Song, as:'songs', where:{status:1, is_deleted:0}, attributes:['uuid', 'status'], required:true},
                     ],
                     order:models.sequelize.literal('songCount DESC'),
                     // $sort: { id: 1 },
