@@ -38,7 +38,7 @@ let controller = {
                     order:[
                         ['updated_at', 'DESC'], ['songs', 'id', 'DESC']
                     ],
-                    // $sort: { id: 1 },
+                    $sort: { id: 1 },
                     group: ['songs.status'],
                 });
                 let response = {
