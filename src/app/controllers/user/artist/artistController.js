@@ -32,10 +32,10 @@ let controller = {
                     },
                     include: [
                         {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio'], required:true},
-                        {model:models.Song, as:'songs', where:{status:1, is_deleted:0}, attributes:[]},
+                        {model:models.Song, as:'songs',attributes:[]},
                         {model:models.Album, as:'albums', attributes:['uuid', 'title']}
                     ],
-                    order:models.sequelize.literal('songCount DESC'),
+                    // order:models.sequelize.literal('songCount DESC'),
                     $sort: { id: 1 },
                     group: ['songs.status'],
                 });
