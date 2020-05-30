@@ -1,5 +1,5 @@
 const { NODE_ENV } = require('../config/app')
-const { AuthController, SongController, ArtistController, SearchController, AlbumController, PlaylistController, UploadController, GenreController,StreamController } = require('../app/controllers/user')
+const { AuthController, SongController, ArtistController, SearchController, AlbumController, PlaylistController, UploadController, GenreController,StreamController, FavController } = require('../app/controllers/user')
 var Request = require('../app/requests/authRequest')
 var auth = require('../app/middlewares/user/authMiddleware')
 
@@ -33,8 +33,9 @@ var user = require('express').Router()
     // user.get('/get/home-page-collection', SongController.getALL);
     user.get('/song/detail/:id', SongController.getById);
     user.get('/song/artist/:id', SongController.getByArtist);
-    user.post('/song/fav/add/:id',auth, SongController.addToFav)
-    user.post('/song/fav/remove/:id',auth, SongController.removeFromFav)
+    user.post('/song/fav/add/:id',auth, FavController.addToFav)
+    user.post('/song/fav/remove/:id',auth, FavController.removeFromFav)
+    user.get('/song/fav/all',auth, FavController.getAll)
 
     // user.post('/play/:path', auth, SongController.playUrl)
     user.post('/play', auth, SongController.playUrl)

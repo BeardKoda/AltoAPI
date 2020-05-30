@@ -22,10 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     status:{
         allowNull:false,
         type:DataTypes.BOOLEAN
-    },
-    is_deleted:{
-        allowNull:false,
-        type:DataTypes.BOOLEAN
     }
   }, {
     underscored: true,
@@ -34,8 +30,8 @@ module.exports = (sequelize, DataTypes) => {
   });
   Favourite.associate = function(models) {
     // // associations can be defined here
-    Favourite.belongsTo(models.Song, {as: 'song', foreignKey:'song_id'})
-    Favourite.belongsTo(models.User, {as: 'album', foreignKey:'user_id'})
+    Favourite.belongsTo(models.Song, {as: 'song', foreignKey:'song_id', targetKey:'id'})
+    Favourite.belongsTo(models.User, {as: 'user', foreignKey:'user_id'})
   };
   return Favourite;
 };
