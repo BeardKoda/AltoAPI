@@ -32,7 +32,7 @@ let controller = {
                     model:models.Song, as:'song', attributes:[['uuid','id'], 'title', ['cover_img','image'], 'featuring', 'producers', 'duration'],
                     include: [
                         {model:models.Album, as:'album', attributes:['id', 'title']},
-                        {model:models.Favourite, as:'isFav', where:{user_id:res.user.id}, attributes:[['uuid','id']]},
+                        {model:models.Favourite, as:'isFav', where:{user_id:res.user.id, status:1}, attributes:[['uuid','id']]},
                         {model:models.Artist, as:'artist', attributes:['id', 'name'], required:true,
                         include:[{model:models.Artist_Profile, as:'profile', attributes:['stage_name'], required:true}]}
                     ]

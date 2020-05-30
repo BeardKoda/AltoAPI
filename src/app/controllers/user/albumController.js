@@ -6,14 +6,14 @@ let offset = 0;
 let controller = {
     getById:async(req, res)=>{
         let uid = req.params.id
-        console.log("here", uid)
+        // console.log("here", uid)
         models.Album.findOne({
             distinct: true,
             subQuery: false,
             where:{uuid:uid}, 
             attributes:[['uuid','id'],'title', ['cover_img', 'image'], 'created_at'],
             include:[
-                {model:models.Song, as:'songs', attributes:[['uuid','id'],'title', ['cover_img', 'image'], 'featuring', 'duration'], order:[[ 'created_at', 'DESC' ]], include:{model:models.Favourite, as:'isFav', where:{user_id:res.user.id}, attributes:[['uuid','id']]}},
+                {model:models.Song, as:'songs', attributes:[['uuid','id'],'title', ['cover_img', 'image'], 'featuring', 'duration'], order:[[ 'created_at', 'DESC' ]], include:{model:models.Favourite, as:'isFav', where:{user_id:res.user.id, status:1}, attributes:[['uuid','id']]}},
                 {model:models.Artist, as:'artist', attributes:[['uuid','id'], 'name'], include:[{model:models.Artist_Profile, as:'profile', required:false, attributes:['stage_name']}]}
             ]
         }).then(
@@ -76,9 +76,9 @@ let controller = {
                 include: [
                     {
                         model:models.Song, as:'songs',  attributes:[['uuid','id'],'title', ['cover_img', 'image'], 'featuring', 'duration'], order:[[ 'created_at', 'DESC' ]], include:
-                        {model:models.Favourite, as:'isFav', where:{user_id:res.user.id}, attributes:[['uuid','id']]},
+                        {model:models.Favourite, as:'isFav', where:{user_id:res.user.id, status:1}, attributes:[['uuid','id']]},
                     },
-                    {model:models.Artist, as:'artist', attributes:[['uuid', 'id'], 'name'], include:[{model:models.Artist_Profile, as:'profile', required:false, attributes:['stage_name']}]}
+                    {model:models.Artist, as:'artist', attributes:[['uuid', 'id'], 'name'], required:true, include:[{model:models.Artist_Profile, required:true, as:'profile',attributes:['stage_name']}]}
                 ],
                 order:[[ 'created_at', 'DESC' ]], 
                 $sort: { id: 1 }
@@ -117,7 +117,7 @@ let controller = {
             include: [
                 {
                     model:models.Song, as:'songs', attributes:['id', 'title',['track_url','fileName'], ['title','originalfileName'], ['cover_img','image'], 'featuring', 'producers','status', 'type', 'year', 'price'], include:
-                    {model:models.Favourite, as:'isFav', where:{user_id:res.user.id}, attributes:[['uuid','id']]},
+                    {model:models.Favourite, as:'isFav', where:{user_id:res.user.id, status:1}, attributes:[['uuid','id']]},
                 },
                 {model:models.Artist, as:'artist', attributes:['id', 'name']}
             ]

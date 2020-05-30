@@ -93,7 +93,9 @@ let controller = {
                 attributes:['uuid', 'id', 'name', ['cover_img','image'], 'premium'],
                 include: [
                     {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
-                    {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}, title:{[Op.ne]:null}, is_deleted:0}, attributes:[['uuid','id'], 'title', 'featuring', 'duration'], required: false,include: [{
+                    {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}, title:{[Op.ne]:null}, is_deleted:0}, attributes:[['uuid','id'], 'title', 'featuring', 'duration'], required: false,
+                    order:[[ 'created_at', 'DESC' ]], include: [
+                        {model:models.Favourite, as:'isFav',attributes:[['uuid','id']],required:false, where:{user_id:res.user.id, status:1} },{
                         model:models.Artist, as:'artist', include:[
                             {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']}
                         ]
@@ -103,7 +105,7 @@ let controller = {
                 ]
             }).then(
                 data =>{
-                    console.log(data)
+                    // console.log(data)
                     return res.status(200).json(data);
                 }
             )
