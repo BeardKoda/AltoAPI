@@ -28,8 +28,8 @@ let controller = {
                 limit: limit,
                 offset: offset,
                 where: {
-                    status: 1,
                     is_deleted:0,
+                    status:{[Op.ne]:0},
                     title: {[Op.like]: '%'+query+'%'}
                 },
                 include: [
