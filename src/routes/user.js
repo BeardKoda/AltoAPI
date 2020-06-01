@@ -31,8 +31,8 @@ var user = require('express').Router()
     user.get('/song/all', auth, SongController.getSongs);
     user.get('/song/free/all', auth, SongController.getFreeSongs);
     // user.get('/get/home-page-collection', SongController.getALL);
-    user.get('/song/detail/:id', SongController.getById);
-    user.get('/song/artist/:id', SongController.getByArtist);
+    user.get('/song/detail/:id', auth, SongController.getById);
+    user.get('/song/artist/:id', auth, SongController.getByArtist);
     user.post('/song/fav/add/:id',auth, FavController.addToFav)
     user.post('/song/fav/remove/:id',auth, FavController.removeFromFav)
     user.get('/song/fav/all',auth, FavController.getAll)

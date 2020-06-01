@@ -11,11 +11,12 @@ const uuidv1 = require('uuid/v1');
 let controller = {
     getById:async(req, res)=>{
         let uid = req.params.id
+        let userId= res.user?res.user.id : 0
         console.log(uid)
         models.Song.findOne({
             where:{uuid:uid},
             attributes:[['uuid','id'],'title', 'genre', 'cover_img', 'duration', 'year',  'type'],
-            include:[{model:models.Album, as:'album', attributes:['uuid', 'title']},
+            include:[{model:models.Favourite, as:'isFav',attributes:[['uuid','id']],required:false, where:{user_id:userId, status:1} },{model:models.Album, as:'album', attributes:['uuid', 'title']},
             {model:models.Artist, as:'artist', attributes:['uuid', 'name'], include:{model:models.Artist_Profile, as:'profile', attributes:['stage_name']}}]
         }).then(
             song =>{
@@ -91,6 +92,8 @@ let controller = {
             },
             $sort: { id: 1 },
             include: [
+                {model:models.Favourite, as:'isFav',attributes:[['uuid','id']],required:false, where:{user_id:res.user.id, status:1} },
+                {model:models.Favourite, as:'isFav',attributes:[['uuid','id']],required:false, where:{user_id:res.user.id, status:1} },
                 {model:models.Album, as:'album', attributes:['id', 'title'], include:[
                     {model:models.Artist, as:'artist', attributes:['id', 'name']}
                 ]}
@@ -115,6 +118,7 @@ let controller = {
             },
             $sort: { id: 1 },
             include: [
+                {model:models.Favourite, as:'isFav',attributes:[['uuid','id']],required:false, where:{user_id:res.user.id, status:1} },
                 {model:models.Album, as:'album', attributes:['id', 'title'], include:[
                     {model:models.Artist, as:'artist', attributes:['id', 'name']}
                 ]}
@@ -188,6 +192,7 @@ let controller = {
             },
             $sort: { id: 1 },
             include: [
+                {model:models.Favourite, as:'isFav',attributes:[['uuid','id']],required:false, where:{user_id:res.user.id, status:1} },
                 {model:models.Album, as:'album', attributes:['id', 'title']},
                 {model:models.Artist, as:'artist', attributes:['id', 'name'], required:true,
                 include:[{model:models.Artist_Profile, as:'profile', attributes:['stage_name'], required:true}]}
