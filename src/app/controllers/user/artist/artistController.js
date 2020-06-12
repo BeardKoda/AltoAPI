@@ -86,6 +86,7 @@ let controller = {
     getById:async(req, res)=>{
         let uid = req.params.id
         // let user = art.Artist(uid)
+        let usrId = res.user ? res.user.id : 0
         if(uid!=null){ 
         // console.log(uid)
             models.Artist.findOne({
@@ -95,7 +96,7 @@ let controller = {
                     {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']},
                     {model:models.Song, as:'songs',where:{status:{[Op.ne]:0}, title:{[Op.ne]:null}, is_deleted:0}, attributes:[['uuid','id'], 'title', 'featuring', 'duration'], required: false,
                     order:[[ 'created_at', 'DESC' ]], include: [
-                        {model:models.Favourite, as:'isFav',attributes:[['uuid','id']],required:false, where:{user_id:res.user.id, status:1} },{
+                        {model:models.Favourite, as:'isFav',attributes:[['uuid','id']],required:false, where:{user_id:usrId, status:1} },{
                         model:models.Artist, as:'artist', include:[
                             {model:models.Artist_Profile, as:'profile', attributes:['avatar', 'full_name', 'stage_name','country','city','genre', 'dob','bio']}
                         ]

@@ -1,6 +1,7 @@
 const { NODE_ENV } = require('../config/app')
 const { AuthController, SongController, ArtistController, SearchController, AlbumController, PlaylistController, UploadController, GenreController,StreamController, FavController } = require('../app/controllers/user')
 var Request = require('../app/requests/authRequest')
+var uploadRequest = require('../app/requests/uploadRequest')
 var auth = require('../app/middlewares/user/authMiddleware')
 
 var multer  = require('multer')
@@ -27,12 +28,12 @@ var user = require('express').Router()
     user.post('/logout', auth, AuthController.logout)
 
     // get All Songs API
-    user.get('/song/:level', auth, SongController.getByLevel);
+    user.get('/song/:level', SongController.getByLevel);
     user.get('/song/all', auth, SongController.getSongs);
     user.get('/song/free/all', auth, SongController.getFreeSongs);
     // user.get('/get/home-page-collection', SongController.getALL);
-    user.get('/song/detail/:id', auth, SongController.getById);
-    user.get('/song/artist/:id', auth, SongController.getByArtist);
+    user.get('/song/detail/:id', SongController.getById);
+    user.get('/song/artist/:id', SongController.getByArtist);
     user.post('/song/fav/add/:id',auth, FavController.addToFav)
     user.post('/song/fav/remove/:id',auth, FavController.removeFromFav)
     user.get('/song/fav/all',auth, FavController.getAll)
@@ -60,15 +61,15 @@ var user = require('express').Router()
     user.get('/artist/get/profile', auth, ArtistController.getData)
     user.get('/artist/dash', auth, ArtistController.getDash) //atist dashboard detail
     user.get('/artist/songs', auth, ArtistController.getSongs) //artist songs
-    user.get('/artist/:type', auth, ArtistController.all);
-    user.get('/artist/load/:id', auth, ArtistController.getById);
+    user.get('/artist/:type', ArtistController.all);
+    user.get('/artist/load/:id', ArtistController.getById);
     user.get('/artist/song/:id', auth, ArtistController.getBySongId);
     user.post('/artist/song/publish/:id', auth, ArtistController.publish)
     user.post('/artist/song/unpublish/:id', auth, ArtistController.unPublish)
 
     // Album details
-    user.get('/album/:type', auth, AlbumController.getAll);
-    user.get('/album/load/:id', auth, AlbumController.getById);
+    user.get('/album/:type',  AlbumController.getAll);
+    user.get('/album/load/:id', AlbumController.getById);
 
     // Genre
     user.get('/genre/featured', GenreController.getALL)
@@ -78,8 +79,10 @@ var user = require('express').Router()
     user.get('/search', SearchController.search)
 
     // get Artist API - for uploading and artist services analytics
+    user.post('/file/upload', auth, UploadController.uploadFile)  //artist song upload
     user.post('/song/upload', auth, UploadController.upload)    //artist song upload
     user.post('/song/update/:id',auth, UploadController.uploadData) //artist song update
+    user.post('/album/upload',[uploadRequest.validate('albumUpload'), auth], UploadController.uploadAlbum)    //artist song upload
 
     // 404 response
     user.get('**', function(req, res){
