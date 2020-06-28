@@ -9,9 +9,8 @@ const uuidv1 = require('uuid/v1');
 
 
 /* GET actorController. */
-class controller {
-
-    upload = async (req, res) => {
+let controller = {
+    upload:async (req, res) => {
         // console.log(res.user)
         const artist = await models.Artist.findOne({where:{user_id:res.user.id}});
         // console.log(artist)
@@ -62,9 +61,9 @@ class controller {
                 res.status(500).send(err);
             }
         }
-    }
-
-    uploadData = async(req,res, next)=>{
+    },
+    
+    uploadData:async(req,res, next)=>{
         let uid = parseInt(req.params.id)
         const { title, genre, cover, featuring, producers, release, description } = req.body
         const artist = await models.Artist.findOne({where:{user_id:res.user.id}});
@@ -109,9 +108,9 @@ class controller {
             res.status(500).json({data:"Internal Server Error"});
             throw new Error(err)
         } 
-    }
+    },
 
-    uploadAlbum = async (req, res) => {
+    uploadAlbum:async (req, res) => {
         const errors = validationResult(req);
         const { title, description, premium, year, genre, songs, image  }= req.body
         try{
@@ -150,9 +149,9 @@ class controller {
         }catch(err){
             console.log(err)
         }
-    }
+    },
 
-    uploadSong = async (song, artist, {year, cover_img, albumId})=>{
+    uploadSong:async (song, artist, {year, cover_img, albumId})=>{
         let songId=uuidv1()
         let avatar = song;
         let name = artist.uuid+'/music/'+Date.now()+'_'+songId;
@@ -188,9 +187,9 @@ class controller {
                 }
             })
         })
-    }
+    },
 
-    uploadFile = async (req, res) => {
+    uploadFile:async (req, res) => {
         console.log(req.files)
         if (!req.files.file || Object.keys(req.files).length === 0) {
             return res.status(400).json({message:'No file was uploaded.'});
@@ -240,5 +239,4 @@ class controller {
         }       
     }
 }
-
-module.exports = new controller();
+module.exports = controller;
